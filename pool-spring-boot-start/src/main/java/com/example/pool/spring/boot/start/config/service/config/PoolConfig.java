@@ -1,12 +1,16 @@
 package com.example.pool.spring.boot.start.config.service.config;
 
+import com.example.pool.spring.boot.start.config.service.domain.entity.ThreadPoolConfigEntity;
+import com.example.pool.spring.boot.start.config.service.domain.enums.RegistryEnumVO;
 import com.example.pool.spring.boot.start.config.service.job.ThreadPoolDataReportJob;
+import com.example.pool.spring.boot.start.config.service.listener.ThreadPoolConfigAdjustListener;
 import com.example.pool.spring.boot.start.config.service.registry.IRegistry;
 import com.example.pool.spring.boot.start.config.service.registry.redis.RedisRegistry;
 import com.example.pool.spring.boot.start.config.service.service.IDynamicThreadPoolService;
 import com.example.pool.spring.boot.start.config.service.service.impl.DynamicThreadPoolService;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.redisson.Redisson;
+import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
@@ -74,5 +78,19 @@ public class PoolConfig {
     public ThreadPoolDataReportJob threadPoolDataReportJob(IDynamicThreadPoolService dynamicThreadPoolService, IRegistry registry) {
         return new ThreadPoolDataReportJob(dynamicThreadPoolService, registry);
     }
+
+    @Bean
+    public ThreadPoolConfigAdjustListener threadPoolConfigAdjustListener(IDynamicThreadPoolService dynamicThreadPoolService, IRegistry registry) {
+        return new ThreadPoolConfigAdjustListener(dynamicThreadPoolService, registry);
+    }
+
+    @Bean(name = "dynamicThreadPoolRedisTopic")
+    public RTopic threadPoolConfigAdjustListener(RedissonClient redissonClient, ThreadPoolConfigAdjustListener threadPoolConfigAdjustListener) {
+        RTopic topic = redissonClient.getTopic(RegistryEnumVO.DYNAMIC_THREAD_POOL_REDIS_TOPIC.getKey() + "_" + applicationName);
+        topic.addListener(ThreadPoolConfigEntity.class, threadPoolConfigAdjustListener);
+        return topic;
+    }
+
+
 
 }

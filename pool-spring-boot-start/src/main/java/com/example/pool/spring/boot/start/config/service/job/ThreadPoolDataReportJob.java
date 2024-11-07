@@ -22,7 +22,7 @@ public class ThreadPoolDataReportJob {
         this.registry = registry;
     }
 
-    @Scheduled(cron = "0/2 * * * * ?")
+    @Scheduled(cron = "0/20 * * * * ?")
     public void execReportThreadPoolList() {
         List<ThreadPoolConfigEntity> threadPoolConfigEntities = dynamicThreadPoolService.queryThreadPoolList();
         registry.reportThreadPool(threadPoolConfigEntities);
