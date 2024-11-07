@@ -1,0 +1,16 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: pool-test
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 25
+        max-pool-size: 50
+        keep-alive-time: 5000
+        block-queue-size: 5000
+        policy: CallerRunsPolicy

@@ -1,13 +1,11 @@
-package com.example.poolspringbootstart;
+package com.example.pool.spring.boot.start.config.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PoolSpringBootStartApplication {
-
+public class Application {
     public static void main(String[] args) {
-        SpringApplication.run(PoolSpringBootStartApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
-
 }
