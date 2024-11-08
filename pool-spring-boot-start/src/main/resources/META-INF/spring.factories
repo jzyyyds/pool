@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.example.pool.spring.boot.start.config.service.config.PoolConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.example.pool.spring.boot.start.config.PoolConfig

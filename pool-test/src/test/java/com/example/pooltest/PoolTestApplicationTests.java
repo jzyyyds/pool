@@ -1,6 +1,6 @@
 package com.example.pooltest;
 
-import com.example.pool.spring.boot.start.config.service.domain.entity.ThreadPoolConfigEntity;
+import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

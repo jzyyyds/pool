@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: pool-admin
+server:
+  port: 8081
+
+redis:
+    config:
+      host: 127.0.0.1
+      port: 6379
+      pool-size: 10
+      min-idle-size: 5
+      idle-timeout: 30000
+      connect-timeout: 5000
+      retry-attempts: 3
+      retry-interval: 1000
+      ping-interval: 60000
+      keep-alive: true
+
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

@@ -6,13 +6,18 @@
     <artifactId>pool-dynamic</artifactId>
     <version>0.0.1</version>
     <name>pool-dynamic</name>
+    <packaging>pom</packaging>
     <description>pool-dynamic</description>
     <modules>
         <module>pool-spring-boot-start</module>
         <module>pool-test</module>
+        <module>pool-admin</module>
     </modules>
+
     <properties>
         <java.version>1.8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.6.13</spring-boot.version>
@@ -58,7 +63,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>pool-dynamic</finalName>
+        <finalName>dynamic-thread-pool</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -83,10 +88,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-archetype-plugin</artifactId>
+                <version>3.2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -104,6 +111,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
             </plugin>
         </plugins>
     </build>

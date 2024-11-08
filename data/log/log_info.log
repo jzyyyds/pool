@@ -1,0 +1,44 @@
+24-11-08.14:48:48.337 [main            ] INFO  PoolAdminApplication   - Starting PoolAdminApplication using Java 1.8.0_311 on LAPTOP-A2SOVEU8 with PID 36152 (D:\pool-dynamic\pool-admin\target\classes started by 17680 in D:\pool-dynamic)
+24-11-08.14:48:48.346 [main            ] INFO  PoolAdminApplication   - No active profile set, falling back to 1 default profile: "default"
+24-11-08.14:48:50.257 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+24-11-08.14:48:50.261 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+24-11-08.14:48:50.298 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+24-11-08.14:48:50.890 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port(s): 8081 (http)
+24-11-08.14:48:50.901 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8081"]
+24-11-08.14:48:50.902 [main            ] INFO  StandardService        - Starting service [Tomcat]
+24-11-08.14:48:50.902 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/9.0.68]
+24-11-08.14:48:51.122 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+24-11-08.14:48:51.123 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2637 ms
+24-11-08.14:48:51.585 [main            ] INFO  Version                - Redisson 3.26.0
+24-11-08.14:48:54.058 [redisson-netty-1-4] INFO  ConnectionsHolder      - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+24-11-08.14:48:54.076 [redisson-netty-1-13] INFO  ConnectionsHolder      - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+24-11-08.14:48:54.737 [main            ] INFO  EndpointLinksResolver  - Exposing 1 endpoint(s) beneath base path '/actuator'
+24-11-08.14:48:54.763 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8081"]
+24-11-08.14:48:54.775 [main            ] INFO  TomcatWebServer        - Tomcat started on port(s): 8081 (http) with context path ''
+24-11-08.14:48:54.791 [main            ] INFO  PoolAdminApplication   - Started PoolAdminApplication in 7.807 seconds (JVM running for 11.519)
+24-11-08.14:48:56.301 [RMI TCP Connection(3)-192.168.1.53] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
+24-11-08.14:48:56.301 [RMI TCP Connection(3)-192.168.1.53] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
+24-11-08.14:48:56.302 [RMI TCP Connection(3)-192.168.1.53] INFO  DispatcherServlet      - Completed initialization in 0 ms
+24-11-08.14:50:17.577 [http-nio-8081-exec-4] INFO  DynamicThreadPoolController - 修改线程池配置开始 short-link-project threadPoolExecutor01 {"activeCount":0,"appName":"short-link-project","corePoolSize":30,"maximumPoolSize":36,"poolSize":0,"queueSize":0,"remainingCapacity":0,"threadPoolName":"threadPoolExecutor01"}
+24-11-08.14:50:17.586 [http-nio-8081-exec-4] INFO  DynamicThreadPoolController - 修改线程池配置完成 short-link-project threadPoolExecutor01
+24-11-08.14:59:58.187 [main            ] INFO  PoolAdminApplication   - Starting PoolAdminApplication using Java 1.8.0_311 on LAPTOP-A2SOVEU8 with PID 26120 (D:\pool-dynamic\pool-admin\target\classes started by 17680 in D:\pool-dynamic)
+24-11-08.14:59:58.194 [main            ] INFO  PoolAdminApplication   - No active profile set, falling back to 1 default profile: "default"
+24-11-08.14:59:59.581 [main            ] INFO  RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+24-11-08.14:59:59.584 [main            ] INFO  RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+24-11-08.14:59:59.618 [main            ] INFO  RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+24-11-08.15:00:00.270 [main            ] INFO  TomcatWebServer        - Tomcat initialized with port(s): 8081 (http)
+24-11-08.15:00:00.282 [main            ] INFO  Http11NioProtocol      - Initializing ProtocolHandler ["http-nio-8081"]
+24-11-08.15:00:00.283 [main            ] INFO  StandardService        - Starting service [Tomcat]
+24-11-08.15:00:00.283 [main            ] INFO  StandardEngine         - Starting Servlet engine: [Apache Tomcat/9.0.68]
+24-11-08.15:00:00.542 [main            ] INFO  [/]                    - Initializing Spring embedded WebApplicationContext
+24-11-08.15:00:00.542 [main            ] INFO  ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2234 ms
+24-11-08.15:00:01.095 [main            ] INFO  Version                - Redisson 3.26.0
+24-11-08.15:00:03.945 [redisson-netty-1-4] INFO  ConnectionsHolder      - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+24-11-08.15:00:03.965 [redisson-netty-1-13] INFO  ConnectionsHolder      - 5 connections initialized for 127.0.0.1/127.0.0.1:6379
+24-11-08.15:00:04.607 [main            ] INFO  EndpointLinksResolver  - Exposing 1 endpoint(s) beneath base path '/actuator'
+24-11-08.15:00:04.636 [main            ] INFO  Http11NioProtocol      - Starting ProtocolHandler ["http-nio-8081"]
+24-11-08.15:00:04.647 [main            ] INFO  TomcatWebServer        - Tomcat started on port(s): 8081 (http) with context path ''
+24-11-08.15:00:04.664 [main            ] INFO  PoolAdminApplication   - Started PoolAdminApplication in 7.487 seconds (JVM running for 9.932)
+24-11-08.15:00:06.174 [RMI TCP Connection(3)-192.168.1.53] INFO  [/]                    - Initializing Spring DispatcherServlet 'dispatcherServlet'
+24-11-08.15:00:06.174 [RMI TCP Connection(3)-192.168.1.53] INFO  DispatcherServlet      - Initializing Servlet 'dispatcherServlet'
+24-11-08.15:00:06.175 [RMI TCP Connection(3)-192.168.1.53] INFO  DispatcherServlet      - Completed initialization in 1 ms
