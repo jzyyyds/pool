@@ -3,7 +3,8 @@ package com.example.pool.spring.boot.start.domain.enums;
 public enum RegistryEnumVO {
     THREAD_POOL_CONFIG_LIST_KEY("THREAD_POOL_CONFIG_LIST_KEY", "池化配置列表"),
     THREAD_POOL_CONFIG_PARAMETER_LIST_KEY("THREAD_POOL_CONFIG_PARAMETER_LIST_KEY", "池化配置参数"),
-    DYNAMIC_THREAD_POOL_REDIS_TOPIC("DYNAMIC_THREAD_POOL_REDIS_TOPIC", "动态线程池监听主题配置");
+    DYNAMIC_THREAD_POOL_REDIS_TOPIC("DYNAMIC_THREAD_POOL_REDIS_TOPIC", "动态线程池监听主题配置"),
+    REPORT_THREAD_POOL_CONFIG_LIST_REDIS_LOCK_KEY("REPORT_THREAD_POOL_CONFIG_LIST_REDIS_LOCK_KEY", "分布式锁");
 
     private final String key;
     private final String desc;

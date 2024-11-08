@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     private final Logger logger = LoggerFactory.getLogger(DynamicThreadPoolService.class);
     private final String applicationName;
-    private final Map<String, ThreadPoolExecutor> threadPoolExecutorMap;
-    public DynamicThreadPoolService(String applicationName, Map<String, ThreadPoolExecutor> threadPoolExecutorMap) {
+    private final ConcurrentHashMap<String, ThreadPoolExecutor> threadPoolExecutorMap;
+    public DynamicThreadPoolService(String applicationName, ConcurrentHashMap<String, ThreadPoolExecutor> threadPoolExecutorMap) {
         this.applicationName = applicationName;
         this.threadPoolExecutorMap = threadPoolExecutorMap;
     }

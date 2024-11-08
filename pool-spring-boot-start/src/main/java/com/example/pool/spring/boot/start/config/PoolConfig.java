@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
@@ -33,6 +34,7 @@ public class PoolConfig {
     private String applicationName;
 
 
+
     @Bean("dynamicThreadPollService")
     public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap){
         applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
@@ -40,7 +42,8 @@ public class PoolConfig {
             applicationName = "缺省的";
             logger.warn("动态线程池，启动提示。SpringBoot 应用未配置 spring.application.name 无法获取到应用名称！");
         }
-        return new DynamicThreadPoolService(applicationName,threadPoolExecutorMap);
+        ConcurrentHashMap<String,ThreadPoolExecutor> map = new ConcurrentHashMap<>(threadPoolExecutorMap);
+        return new DynamicThreadPoolService(applicationName,map);
     }
 
 
