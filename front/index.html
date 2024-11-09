@@ -294,7 +294,7 @@ label {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.code === "0000") {
-                        alert('Configuration updated successfully!');
+                        alert('已成功发生变更消息');
                         modal.style.display = "none";
                         fetchThreadPoolList(); // 重新加载线程池列表
                     } else {

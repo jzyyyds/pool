@@ -68,14 +68,39 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     }
 
     @Override
-    public void updateThreadPoolConfig(ThreadPoolConfigEntity threadPoolConfigEntity) {
+    public boolean updateThreadPoolConfig(ThreadPoolConfigEntity threadPoolConfigEntity) {
         //1.先判断应用的名称是否相同以及线程池是否为空
-        if (null == threadPoolConfigEntity || !applicationName.equals(threadPoolConfigEntity.getAppName())) return;
-        ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorMap.get(threadPoolConfigEntity.getThreadPoolName());
-        if (null == threadPoolExecutor) return;
-
-        // 设置参数 「调整核心线程数和最大线程数」
-        threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
-        threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
+        if (threadPoolConfigEntity==null){
+            return false;
+        }
+        if (!threadPoolConfigEntity.getAppName().equals(applicationName)){
+            return false;
+        }
+        String threadPoolName = threadPoolConfigEntity.getThreadPoolName();
+        if (threadPoolName==null&&threadPoolName.length()==0){
+            return false;
+        }
+        ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorMap.get(threadPoolName);
+        if (threadPoolExecutor==null){
+            return false;
+        }
+        int corePoolSize = threadPoolConfigEntity.getCorePoolSize();
+        int maximumPoolSize = threadPoolConfigEntity.getMaximumPoolSize();
+        if (corePoolSize>maximumPoolSize){
+            //TODO 增加告警的信息
+            logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
+            return false;
+        }
+        //变更的时候需要注意，要满足核心线程数小于最大线程数
+        if (corePoolSize < threadPoolExecutor.getMaximumPoolSize()) {
+            threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
+            threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
+        } else {
+            threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
+            threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
+        }
+        //TODO 变更阻塞队列的大小
+        //TODO 推送变更成功的信息
+        return true;
     }
 }

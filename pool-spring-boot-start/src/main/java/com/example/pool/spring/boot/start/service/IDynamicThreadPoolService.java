@@ -12,5 +12,5 @@ public interface IDynamicThreadPoolService {
 
     ThreadPoolConfigEntity queryThreadPoolConfigByName(String threadPoolName);
 
-    void updateThreadPoolConfig(ThreadPoolConfigEntity threadPoolConfigEntity);
+    boolean updateThreadPoolConfig(ThreadPoolConfigEntity threadPoolConfigEntity);
 }

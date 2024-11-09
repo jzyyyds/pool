@@ -67,7 +67,7 @@ public class DynamicThreadPoolController {
             log.info("修改线程池配置开始 {} {} {}", request.getAppName(), request.getThreadPoolName(), JSON.toJSONString(request));
             RTopic topic = redissonClient.getTopic("DYNAMIC_THREAD_POOL_REDIS_TOPIC" + "_" + request.getAppName());
             topic.publish(request);
-            log.info("修改线程池配置完成 {} {}", request.getAppName(), request.getThreadPoolName());
+            log.info("发送变更消息完成", request.getAppName(), request.getThreadPoolName());
             return Response.<Boolean>builder()
                     .code(Code.SUCCESS.getCode())
                     .info(Code.SUCCESS.getInfo())
