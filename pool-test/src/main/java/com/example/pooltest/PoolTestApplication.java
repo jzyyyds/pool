@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @EnableConfigurationProperties(ThreadPoolConfigProperties.class)
+@Configurable
 public class PoolTestApplication {
 
     public static void main(String[] args) {

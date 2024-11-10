@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.example.pool.spring.boot.start.config.PoolConfig
+  com.example.pool.spring.boot.start.config.PoolConfig,\
+  com.example.pool.spring.boot.start.config.AlarmConfig

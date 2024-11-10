@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>pool-spring-boot-start</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <name>pool-spring-boot-start</name>
     <description>pool-spring-boot-start</description>
     <parent>
@@ -66,6 +66,22 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.26.0</version>
         </dependency>
+        <!--监控的依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <!--邮件通知的依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

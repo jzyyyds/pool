@@ -1,16 +1,17 @@
 package com.example.pool.spring.boot.start.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
+import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
+import com.example.pool.spring.boot.start.service.IAlarmService;
 import com.example.pool.spring.boot.start.service.IDynamicThreadPoolService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -18,6 +19,9 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     private final Logger logger = LoggerFactory.getLogger(DynamicThreadPoolService.class);
     private final String applicationName;
     private final ConcurrentHashMap<String, ThreadPoolExecutor> threadPoolExecutorMap;
+    @Autowired
+    private IAlarmService alarmService;
+
     public DynamicThreadPoolService(String applicationName, ConcurrentHashMap<String, ThreadPoolExecutor> threadPoolExecutorMap) {
         this.applicationName = applicationName;
         this.threadPoolExecutorMap = threadPoolExecutorMap;
@@ -88,6 +92,14 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         int maximumPoolSize = threadPoolConfigEntity.getMaximumPoolSize();
         if (corePoolSize>maximumPoolSize){
             //TODO 增加告警的信息
+            AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
+            alarmMessageVo.setApplicationName(applicationName);
+            alarmMessageVo.setMessage("出现问题");
+            Map<String,String> map = new HashMap<>();
+            map.put("core.pool.size",String.valueOf(corePoolSize));
+            map.put("max.pool.size",String.valueOf(maximumPoolSize));
+            alarmMessageVo.setParameters(map);
+            alarmService.send(alarmMessageVo);
             logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
             return false;
         }

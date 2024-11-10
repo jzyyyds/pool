@@ -1,5 +1,6 @@
 package com.example.pool.spring.boot.start.config;
 
+import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.domain.enums.RegistryEnumVO;
 import com.example.pool.spring.boot.start.job.ThreadPoolDataReportJob;
@@ -16,6 +17,7 @@ import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +39,7 @@ public class PoolConfig {
 
 
     @Bean("dynamicThreadPollService")
-    public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap,RedissonClient redissonClient){
+    public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap, RedissonClient redissonClient){
         applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
         if (StringUtils.isBlank(applicationName)) {
             applicationName = "缺省的";
