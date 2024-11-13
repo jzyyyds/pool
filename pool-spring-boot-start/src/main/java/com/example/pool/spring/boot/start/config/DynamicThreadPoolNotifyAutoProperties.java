@@ -34,4 +34,5 @@ public class DynamicThreadPoolNotifyAutoProperties {
         private String dingding;
         private String feishu;
     }
+
 }

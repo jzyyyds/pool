@@ -30,7 +30,7 @@ public class AlarmServiceImpl implements IAlarmService {
     public void send(AlarmMessageVo message) {
         List<String> usePlatform = dynamicThreadPoolNotifyAutoProperties.getUsePlatform();
         //TODO 根据usePlatform来进行消息的发送
-        AlarmStrategy email = strategies.get("feishu");
+        AlarmStrategy email = strategies.get("dingding");
         email.sendNotify(message);
     }
 }
