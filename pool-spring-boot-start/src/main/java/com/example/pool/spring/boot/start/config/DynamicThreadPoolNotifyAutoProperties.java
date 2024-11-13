@@ -16,6 +16,7 @@ public class DynamicThreadPoolNotifyAutoProperties {
     private Boolean enable;
     private List<String> usePlatform = new ArrayList<>();
     private Email email;
+    private Webhook webhook;
 
 
     @Data
@@ -25,5 +26,12 @@ public class DynamicThreadPoolNotifyAutoProperties {
         private String from;
         private String to;
         private String password;
+    }
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Webhook {
+        private String dingding;
+        private String feishu;
     }
 }

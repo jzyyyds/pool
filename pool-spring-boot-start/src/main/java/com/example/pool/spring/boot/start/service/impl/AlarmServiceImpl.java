@@ -16,16 +16,21 @@ import java.util.stream.Collectors;
 
 public class AlarmServiceImpl implements IAlarmService {
     private final Logger logger = LoggerFactory.getLogger(AlarmServiceImpl.class);
+
     private Map<String, AlarmStrategy> strategies = new HashMap<>();
+
     private final DynamicThreadPoolNotifyAutoProperties dynamicThreadPoolNotifyAutoProperties;
+
     public AlarmServiceImpl(DynamicThreadPoolNotifyAutoProperties dynamicThreadPoolNotifyAutoProperties, List<AlarmStrategy> alarmStrategies){
         this.dynamicThreadPoolNotifyAutoProperties = dynamicThreadPoolNotifyAutoProperties;
         this.strategies = alarmStrategies.stream().collect(Collectors.toMap(AlarmStrategy::getStrategyName,strategies->strategies));
     }
+
     @Override
     public void send(AlarmMessageVo message) {
         List<String> usePlatform = dynamicThreadPoolNotifyAutoProperties.getUsePlatform();
-        AlarmStrategy email = strategies.get("email");
+        //TODO 根据usePlatform来进行消息的发送
+        AlarmStrategy email = strategies.get("feishu");
         email.sendNotify(message);
     }
 }
