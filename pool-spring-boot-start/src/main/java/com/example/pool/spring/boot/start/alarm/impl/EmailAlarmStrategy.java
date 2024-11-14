@@ -2,6 +2,7 @@ package com.example.pool.spring.boot.start.alarm.impl;
 
 import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
 import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
+import com.example.pool.spring.boot.start.domain.enums.AlarmEnum;
 import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
 import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,6 @@ public class EmailAlarmStrategy extends AlarmAbstract {
 
     @Override
     public String getStrategyName() {
-        return "email";
+        return AlarmEnum.EMAIL.getKey();
     }
 }

@@ -3,6 +3,7 @@ package com.example.pool.spring.boot.start.alarm.impl;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
 import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
+import com.example.pool.spring.boot.start.domain.enums.AlarmEnum;
 import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
 import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
 import org.slf4j.Logger;
@@ -38,6 +39,6 @@ public class FeishuStrategy extends AlarmAbstract {
 
     @Override
     public String getStrategyName() {
-        return "feishu";
+        return AlarmEnum.FEISHU.getKey();
     }
 }
