@@ -5,6 +5,7 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
 import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
+import com.example.pool.spring.boot.start.domain.enums.AlarmEnum;
 import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
 import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
 import com.taobao.api.ApiException;
@@ -12,14 +13,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 @Component
 public class DingDingStrategy extends AlarmAbstract {
@@ -33,7 +26,7 @@ public class DingDingStrategy extends AlarmAbstract {
 
     @Override
     public String getStrategyName() {
-        return "dingding";
+        return AlarmEnum.DINGDING.getKey();
     }
 
     @Override
