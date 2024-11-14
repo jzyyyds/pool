@@ -29,8 +29,9 @@ public class AlarmServiceImpl implements IAlarmService {
     @Override
     public void send(AlarmMessageVo message) {
         List<String> usePlatform = dynamicThreadPoolNotifyAutoProperties.getUsePlatform();
-        //TODO 根据usePlatform来进行消息的发送
-        AlarmStrategy email = strategies.get("dingding");
-        email.sendNotify(message);
+        for (int i = 0; i < usePlatform.size(); i++) {
+            AlarmStrategy alarmStrategy = strategies.get(usePlatform.get(i));
+            alarmStrategy.sendNotify(message);
+        }
     }
 }
