@@ -54,7 +54,7 @@
         <!-- 线程组件 -->
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>pool-spring-boot-start</artifactId>
+            <artifactId>pool-spring-boot-starter</artifactId>
             <version>0.0.4</version>
         </dependency>
     </dependencies>

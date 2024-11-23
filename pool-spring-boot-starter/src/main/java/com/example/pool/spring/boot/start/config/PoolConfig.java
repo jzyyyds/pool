@@ -18,6 +18,8 @@ import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -62,6 +64,7 @@ public class PoolConfig {
 
 
     @Bean("dynamicThreadRedissonClient")
+    @ConditionalOnProperty(prefix = "dynamic.thread.pool.config",name = "used",value = "redis")
     public RedissonClient redissonClient(DynamicThreadPoolAutoProperties properties) {
         Config config = new Config();
         config.setCodec(JsonJacksonCodec.INSTANCE);
@@ -87,16 +90,19 @@ public class PoolConfig {
     }
 
     @Bean
+    @ConditionalOnBean(name = "dynamicThreadRedissonClient")
     public IRegistry redisRegistry(RedissonClient dynamicThreadRedissonClient) {
         return new RedisRegistry(dynamicThreadRedissonClient);
     }
 
     @Bean
+    @ConditionalOnBean(name = "dynamicThreadRedissonClient")
     public ThreadPoolDataReportJob threadPoolDataReportJob(IDynamicThreadPoolService dynamicThreadPoolService, IRegistry registry) {
         return new ThreadPoolDataReportJob(dynamicThreadPoolService, registry);
     }
 
     @Bean(name = "threadPoolListener")
+    @ConditionalOnBean(name = "dynamicThreadRedissonClient")
     public ThreadPoolConfigAdjustListener threadPoolListener(IDynamicThreadPoolService dynamicThreadPoolService, IRegistry registry) {
         return new ThreadPoolConfigAdjustListener(dynamicThreadPoolService, registry);
     }

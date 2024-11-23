@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <description>pool-dynamic</description>
     <modules>
-        <module>pool-spring-boot-start</module>
+        <module>pool-spring-boot-starter</module>
         <module>pool-test</module>
         <module>pool-admin</module>
     </modules>
