@@ -160,6 +160,7 @@ label {
             <input type="number" id="corePoolSize" name="corePoolSize"><br>
             <label for="maximumPoolSize">最大线程数:</label><br>
             <input type="number" id="maximumPoolSize" name="maximumPoolSize"><br>
+            <input type="text" id="dynamic" name="dynamic" style="display:none;" readonly><br>
             <button type="button" onclick="updateConfig()">确认修改</button>
         </form>
     </div>
@@ -266,6 +267,7 @@ label {
                         document.getElementById('corePoolSize').value = response.data.corePoolSize;
                         document.getElementById('maximumPoolSize').value = response.data.maximumPoolSize;
                         // ... (填充其他只读字段) ...
+                        document.getElementById('dynamic').value = response.data.dynamic;
                         modal.style.display = "block";
                     } else {
                         console.error('The request was successful but the data format is incorrect!');
@@ -286,7 +288,7 @@ label {
             var threadPoolName = document.getElementById('threadPoolName').value;
             var corePoolSize = document.getElementById('corePoolSize').value;
             var maximumPoolSize = document.getElementById('maximumPoolSize').value;
-
+            var dynamic = document.getElementById('dynamic').value;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'http://localhost:8081/api/v1/dynamic/thread/pool/update_thread_pool_config', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -311,7 +313,8 @@ label {
                 appName: appName,
                 threadPoolName: threadPoolName,
                 corePoolSize: parseInt(corePoolSize, 10),
-                maximumPoolSize: parseInt(maximumPoolSize, 10)
+                maximumPoolSize: parseInt(maximumPoolSize, 10),
+                dynamic: dynamic
             }));
         }
 

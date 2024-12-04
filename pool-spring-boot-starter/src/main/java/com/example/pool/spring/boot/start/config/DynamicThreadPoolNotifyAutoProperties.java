@@ -27,6 +27,7 @@ public class DynamicThreadPoolNotifyAutoProperties {
         private String to;
         private String password;
     }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

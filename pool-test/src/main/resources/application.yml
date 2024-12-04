@@ -3,6 +3,21 @@ server:
 spring:
   application:
     name: pool-test
+  mail:
+    # 下面这个是QQ邮箱host ， 企业邮箱 smtp.exmail.qq.com
+    host: smtp.qq.com
+  # tencent mail port  这个是固定的
+  port: 465
+  # 你的QQ邮箱
+  username: 1768017757@qq.com
+  # 进入邮箱配置后得到的授权码
+  password: zqaffdxpmbwjdfdd
+  test-connection: true
+  properties:
+    mail:
+      smtp:
+        ssl:
+          enable: true
 
 # 线程池配置
 thread:
@@ -27,3 +42,11 @@ dynamic:
         host: 127.0.0.1
         # redis port
         port: 6379
+
+dynamic-thread-pool:
+  alarm:
+    enable: true
+    use-platform: dingding
+    webhook:
+      #feishu: https://open.feishu.cn/open-apis/bot/v2/hook/898031bb-892f-4c20-91e4-be92732fa05c
+      dingding: 6ff7ae88d03921dc85109541ebdf7a5fb43e700a7851cdf661eff48dae94c4d5

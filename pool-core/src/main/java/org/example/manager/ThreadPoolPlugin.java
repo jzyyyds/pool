@@ -5,6 +5,8 @@ package org.example.manager;
  */
 public interface ThreadPoolPlugin {
 
+    String getId();
+
     default void beforeExecute(Thread thread, Runnable runnable) {
 
     }

@@ -33,13 +33,14 @@ public class ThreadPoolConfigAdjustListener implements MessageListener<ThreadPoo
             return;
         }
         //成功后的操作
-        // 更新后上报最新数据
-        List<ThreadPoolConfigEntity> threadPoolConfigEntities = dynamicThreadPoolService.queryThreadPoolList();
-        registry.reportThreadPool(threadPoolConfigEntities);
+        // 更新后上报最新修改数据即可
+        //List<ThreadPoolConfigEntity> threadPoolConfigEntities = dynamicThreadPoolService.queryThreadPoolList();
+        //registry.updateThreadPoolEntity(threadPoolConfigEntity);
+        //registry.reportThreadPool(threadPoolConfigEntities);
 
-        ThreadPoolConfigEntity threadPoolConfigEntityCurrent = dynamicThreadPoolService.queryThreadPoolConfigByName(threadPoolConfigEntity.getThreadPoolName());
-        registry.reportThreadPoolConfigParameter(threadPoolConfigEntityCurrent);
-        logger.info("动态线程池，上报线程池配置：{}", JSON.toJSONString(threadPoolConfigEntity));
+//        ThreadPoolConfigEntity threadPoolConfigEntityCurrent = dynamicThreadPoolService.queryThreadPoolConfigByName(threadPoolConfigEntity.getThreadPoolName());
+//        registry.reportThreadPoolConfigParameter(threadPoolConfigEntityCurrent);
+
     }
 
 }

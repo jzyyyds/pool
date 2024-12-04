@@ -2,8 +2,10 @@ package com.example.pool.spring.boot.start.registry.redis;
 
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.domain.enums.RegistryEnumVO;
+import com.example.pool.spring.boot.start.manager.GlobalThreadPoolManage;
 import com.example.pool.spring.boot.start.registry.IRegistry;
 import lombok.extern.slf4j.Slf4j;
+import org.example.executor.DynamicThreadPoolExecutor;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RLock;
@@ -69,9 +71,8 @@ public class RedisRegistry implements IRegistry {
             Optional<ThreadPoolConfigEntity> threadPoolConfigEntity = resultList.stream().filter(x -> x.getThreadPoolName().equals(pool.getThreadPoolName())).findFirst();
             if (threadPoolConfigEntity.isPresent()) {
                 ThreadPoolConfigEntity entity = threadPoolConfigEntity.get();
-                //如果存在的话，此时判断最大线程数和核心线程数是否相等
-                if (pool.getCorePoolSize() == entity.getCorePoolSize() &&
-                        pool.getMaximumPoolSize() == entity.getMaximumPoolSize()) {
+                //如果存在的话，此时要判断是否相等
+                if (Objects.equals(pool,threadPoolConfigEntity)) {
                     return true;
                 }
             }
@@ -82,9 +83,7 @@ public class RedisRegistry implements IRegistry {
         //redis里面的数据也是一样，移除不在交集的数据
         resultList.stream().forEach(x->{
             Optional<ThreadPoolConfigEntity> first = sameList.stream().filter(y -> {
-                if (x.getThreadPoolName().equals(y.getThreadPoolName()) &&
-                        y.getCorePoolSize() == x.getCorePoolSize() &&
-                        y.getMaximumPoolSize() == x.getMaximumPoolSize()) {
+                if (Objects.equals(x,y)) {
                     return true;
                 }
                 return false;
@@ -102,5 +101,33 @@ public class RedisRegistry implements IRegistry {
         String cacheKey = RegistryEnumVO.THREAD_POOL_CONFIG_PARAMETER_LIST_KEY.getKey() + "_" + threadPoolConfigEntity.getAppName() + "_" + threadPoolConfigEntity.getThreadPoolName();
         RBucket<ThreadPoolConfigEntity> bucket = redissonClient.getBucket(cacheKey);
         bucket.set(threadPoolConfigEntity, Duration.ofDays(30));
+    }
+
+    @Override
+    public void updateThreadPoolEntity(ThreadPoolConfigEntity threadPoolConfigEntity) {
+        RLock lock = redissonClient.getLock(RegistryEnumVO.REPORT_THREAD_POOL_CONFIG_LIST_REDIS_LOCK_KEY.getKey());
+        try {
+            boolean hasLock = lock.tryLock(3000, 3000, TimeUnit.MILLISECONDS);
+            RList<ThreadPoolConfigEntity> list = redissonClient.getList(RegistryEnumVO.THREAD_POOL_CONFIG_LIST_KEY.getKey());
+            //此时需要先进行去重的操作
+            if (list.isEmpty()) {
+                list.add(threadPoolConfigEntity);
+                return;
+            } else {
+                Optional<ThreadPoolConfigEntity> result = list.stream().
+                        filter(x -> x.isDynamic() == threadPoolConfigEntity.isDynamic() && x.getThreadPoolName().equals(threadPoolConfigEntity.getThreadPoolName())).findFirst();
+                if (Objects.isNull(result)) {
+                    list.add(threadPoolConfigEntity);
+                } else {
+                    list.remove(result.get());
+                    list.add(threadPoolConfigEntity);
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            lock.unlock();
+        }
+
     }
 }

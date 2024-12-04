@@ -8,6 +8,7 @@ import org.example.manager.ThreadPoolPlugin;
 
 public interface ExecuteAwarePlugin extends ThreadPoolPlugin {
 
+
     default void beforeExecute(Thread thread, Runnable runnable) {
     }
 

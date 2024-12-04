@@ -54,6 +54,8 @@ public class ThreadPoolConfigEntity {
      */
     private int remainingCapacity;
 
+    private boolean isDynamic;
+
 
     public ThreadPoolConfigEntity(String appName, String threadPoolName) {
         this.appName = appName;

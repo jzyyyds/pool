@@ -1,6 +1,7 @@
 package com.example.pool.spring.boot.start.domain.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ThreadPoolConfigEntity {
     /**
      * 应用名称
      */
     private String appName;
+    /**
+     * 线程池的id
+     */
+    private String threadPoolId;
 
     /**
      * 线程池名称
@@ -55,6 +61,8 @@ public class ThreadPoolConfigEntity {
      * 队列剩余任务数
      */
     private int remainingCapacity;
+
+    private boolean dynamic;
 
     public ThreadPoolConfigEntity(String appName, String threadPoolName) {
         this.appName = appName;

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadPoolDataReportJob {
@@ -25,10 +26,11 @@ public class ThreadPoolDataReportJob {
     @Scheduled(cron = "0/20 * * * * ?")
     public void execReportThreadPoolList() {
         List<ThreadPoolConfigEntity> threadPoolConfigEntities = dynamicThreadPoolService.queryThreadPoolList();
+        List<ThreadPoolConfigEntity> result = new ArrayList<>(threadPoolConfigEntities);
         registry.reportThreadPool(threadPoolConfigEntities);
         logger.info("动态线程池，上报线程池信息：{}", JSON.toJSONString(threadPoolConfigEntities));
 
-        for (ThreadPoolConfigEntity threadPoolConfigEntity : threadPoolConfigEntities) {
+        for (ThreadPoolConfigEntity threadPoolConfigEntity : result) {
             registry.reportThreadPoolConfigParameter(threadPoolConfigEntity);
             logger.info("动态线程池，上报线程池配置：{}", JSON.toJSONString(threadPoolConfigEntity));
         }
