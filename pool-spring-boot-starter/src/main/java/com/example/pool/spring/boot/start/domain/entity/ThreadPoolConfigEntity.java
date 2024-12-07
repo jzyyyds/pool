@@ -53,6 +53,11 @@ public class ThreadPoolConfigEntity {
     private String queueType;
 
     /**
+     * 队列大小
+     */
+    private int workQueueSize;
+
+    /**
      * 当前队列任务数
      */
     private int queueSize;
@@ -62,6 +67,9 @@ public class ThreadPoolConfigEntity {
      */
     private int remainingCapacity;
 
+    /**
+     * 是否是动态线程池
+     */
     private boolean dynamic;
 
     public ThreadPoolConfigEntity(String appName, String threadPoolName) {

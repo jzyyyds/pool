@@ -56,20 +56,6 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             }
         }
         return result;
-//        Set<String> threadPoolBeanNames = threadPoolExecutorMap.keySet();
-//        List<ThreadPoolConfigEntity> threadPoolVOS = new ArrayList<>(threadPoolBeanNames.size());
-//        for (String beanName : threadPoolBeanNames) {
-//            ThreadPoolConfigEntity threadPoolConfigVO = new ThreadPoolConfigEntity(applicationName, beanName);
-//            threadPoolConfigVO.setCorePoolSize(threadPoolExecutor.getCorePoolSize());
-//            threadPoolConfigVO.setMaximumPoolSize(threadPoolExecutor.getMaximumPoolSize());
-//            threadPoolConfigVO.setActiveCount(threadPoolExecutor.getActiveCount());
-//            threadPoolConfigVO.setPoolSize(threadPoolExecutor.getPoolSize());
-//            threadPoolConfigVO.setQueueType(threadPoolExecutor.getQueue().getClass().getSimpleName());
-//            threadPoolConfigVO.setQueueSize(threadPoolExecutor.getQueue().size());
-//            threadPoolConfigVO.setRemainingCapacity(threadPoolExecutor.getQueue().remainingCapacity());
-//            threadPoolVOS.add(threadPoolConfigVO);
-//        }
-//        return threadPoolVOS;
     }
 
     @Override
@@ -86,20 +72,6 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         }
 
         return entityByName;
-//        if (null == threadPoolExecutor) return new ThreadPoolConfigEntity(applicationName, threadPoolName);
-//
-//        // 线程池配置数据
-//        ThreadPoolConfigEntity threadPoolConfigVO = new ThreadPoolConfigEntity(applicationName, threadPoolName);
-//        threadPoolConfigVO.setCorePoolSize(threadPoolExecutor.getCorePoolSize());
-//        threadPoolConfigVO.setMaximumPoolSize(threadPoolExecutor.getMaximumPoolSize());
-//        threadPoolConfigVO.setActiveCount(threadPoolExecutor.getActiveCount());
-//        threadPoolConfigVO.setPoolSize(threadPoolExecutor.getPoolSize());
-//        threadPoolConfigVO.setQueueType(threadPoolExecutor.getQueue().getClass().getSimpleName());
-//        threadPoolConfigVO.setQueueSize(threadPoolExecutor.getQueue().size());
-//        threadPoolConfigVO.setRemainingCapacity(threadPoolExecutor.getQueue().remainingCapacity());
-
-
-        //return threadPoolConfigVO;
     }
 
     @Override
@@ -144,6 +116,7 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             alarmMessageVo.setParameters(map);
             alarmService.send(alarmMessageVo);
             logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
+            return;
         }
         //变更的时候需要注意，要满足核心线程数小于最大线程数
         if (corePoolSize < threadPoolExecutor.getMaximumPoolSize()) {
@@ -153,10 +126,11 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
             threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
         }
+        //判断是否是使用加强后的队列，是的话在判断是否队列的大小有被更改，有的话就重新设置
         if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
-            int queueSize = threadPoolConfigEntity.getQueueSize();
-            if (threadPoolExecutor.getQueue().size() != queueSize) {
-                ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(queueSize);
+            int workQueueSize = threadPoolConfigEntity.getWorkQueueSize();
+            if (threadPoolConfigEntity.getWorkQueueSize() != workQueueSize) {
+                ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(threadPoolConfigEntity.getWorkQueueSize());
             }
         }
         //重新放入全局管理器，不然会更新失败
@@ -167,7 +141,7 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         registry.updateThreadPoolEntity(threadPoolConfigEntity);
         registry.reportThreadPoolConfigParameter(threadPoolConfigEntity);
         logger.info("动态线程池，上报线程池配置：{}", JSON.toJSONString(threadPoolConfigEntity));
-         //TODO 推送变更成功的信息
+        //TODO 推送变更成功的信息
 
     }
 
@@ -182,7 +156,7 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         entity.setQueueSize(threadPoolExecutor.getQueue().size());
         //TODO 后续需要补充，现在先写死
         entity.setQueueType(threadPoolExecutor.getQueue().getClass().getSimpleName());
-        //TODO 队列的长度
+        entity.setWorkQueueSize(threadPoolConfigEntity.getWorkQueueSize());
         return entity;
     }
 }

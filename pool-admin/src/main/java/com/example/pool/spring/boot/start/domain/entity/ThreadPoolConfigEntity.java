@@ -56,6 +56,8 @@ public class ThreadPoolConfigEntity {
 
     private boolean isDynamic;
 
+    private int workQueueSize;
+
 
     public ThreadPoolConfigEntity(String appName, String threadPoolName) {
         this.appName = appName;

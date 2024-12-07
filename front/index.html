@@ -136,6 +136,7 @@ label {
             <th>当前活跃线程数</th>
             <th>当前池中线程数</th>
             <th>队列类型</th>
+            <th>队列长度</th>
             <th>当前队列任务数</th>
             <th>队列剩余容量数</th>
         </tr>
@@ -160,6 +161,8 @@ label {
             <input type="number" id="corePoolSize" name="corePoolSize"><br>
             <label for="maximumPoolSize">最大线程数:</label><br>
             <input type="number" id="maximumPoolSize" name="maximumPoolSize"><br>
+            <label for="workQueueSize">队列的长度</label><br>
+            <input type="number" id="workQueueSize" name="workQueueSize"><br>
             <input type="text" id="dynamic" name="dynamic" style="display:none;" readonly><br>
             <button type="button" onclick="updateConfig()">确认修改</button>
         </form>
@@ -212,6 +215,7 @@ label {
                                 html += '<td>' + item.activeCount + '</td>';
                                 html += '<td>' + item.poolSize + '</td>';
                                 html += '<td>' + item.queueType + '</td>';
+                                html += '<td>' + item.workQueueSize + '</td>';
                                 html += '<td>' + item.queueSize + '</td>';
                                 html += '<td>' + item.remainingCapacity + '</td>';
                                 html += '<td><button onclick="openModal(\'' + item.appName + '\', \'' + item.threadPoolName + '\')">修改</button></td>';
@@ -266,6 +270,7 @@ label {
                         document.getElementById('threadPoolName').value = response.data.threadPoolName;
                         document.getElementById('corePoolSize').value = response.data.corePoolSize;
                         document.getElementById('maximumPoolSize').value = response.data.maximumPoolSize;
+                        document.getElementById('workQueueSize').value = response.data.workQueueSize;
                         // ... (填充其他只读字段) ...
                         document.getElementById('dynamic').value = response.data.dynamic;
                         modal.style.display = "block";
@@ -289,6 +294,7 @@ label {
             var corePoolSize = document.getElementById('corePoolSize').value;
             var maximumPoolSize = document.getElementById('maximumPoolSize').value;
             var dynamic = document.getElementById('dynamic').value;
+            var workQueueSize = document.getElementById('workQueueSize').value;
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'http://localhost:8081/api/v1/dynamic/thread/pool/update_thread_pool_config', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
@@ -314,7 +320,8 @@ label {
                 threadPoolName: threadPoolName,
                 corePoolSize: parseInt(corePoolSize, 10),
                 maximumPoolSize: parseInt(maximumPoolSize, 10),
-                dynamic: dynamic
+                dynamic: dynamic,
+                workQueueSize: workQueueSize
             }));
         }
 
