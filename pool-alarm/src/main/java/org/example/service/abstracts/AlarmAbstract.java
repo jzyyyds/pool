@@ -1,16 +1,14 @@
-package com.example.pool.spring.boot.start.service.abstracts;
+package org.example.service.abstracts;
 
-import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
+
+import org.example.alarm.AlarmStrategy;
+import org.example.domain.vo.AlarmMessageVo;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
+
 @Component
 public abstract class AlarmAbstract implements AlarmStrategy {
     public abstract String getStrategyName();

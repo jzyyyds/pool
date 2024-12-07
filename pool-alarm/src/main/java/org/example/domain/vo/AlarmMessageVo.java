@@ -1,4 +1,4 @@
-package com.example.pool.spring.boot.start.domain.vo;
+package org.example.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

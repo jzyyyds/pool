@@ -1,6 +1,7 @@
-package com.example.pool.spring.boot.start.alarm;
+package org.example.alarm;
 
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
+
+import org.example.domain.vo.AlarmMessageVo;
 
 /**
  * 告警的接口

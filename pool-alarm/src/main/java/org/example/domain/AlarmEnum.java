@@ -1,4 +1,4 @@
-package com.example.pool.spring.boot.start.domain.enums;
+package org.example.domain;
 
 public enum AlarmEnum {
     EMAIL("email"),

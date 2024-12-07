@@ -1,19 +1,14 @@
-package com.example.pool.spring.boot.start.alarm.impl;
+package org.example.alarm.impl;
 
-import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
-import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
-import com.example.pool.spring.boot.start.domain.enums.AlarmEnum;
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
-import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
+
+import org.example.config.DynamicThreadPoolNotifyAutoProperties;
+import org.example.domain.AlarmEnum;
+import org.example.domain.vo.AlarmMessageVo;
+import org.example.service.abstracts.AlarmAbstract;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
-
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 
 @Component

@@ -2,14 +2,15 @@ package com.example.pool.spring.boot.start.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
 import com.example.pool.spring.boot.start.manager.GlobalThreadPoolManage;
 import com.example.pool.spring.boot.start.registry.IRegistry;
-import com.example.pool.spring.boot.start.service.IAlarmService;
 import com.example.pool.spring.boot.start.service.IDynamicThreadPoolService;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
+import org.example.domain.vo.AlarmMessageVo;
 import org.example.executor.DynamicThreadPoolExecutor;
 import org.example.queue.ResizableCapacityLinkedBlockingQueue;
+import org.example.service.IAlarmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     public DynamicThreadPoolService(String applicationName,IRegistry registry) {
         this.applicationName = applicationName;
         this.registry = registry;
+        //this.alarmService = alarmService;
     }
 
     @Override
@@ -94,8 +96,6 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             ThreadPoolExecutor threadPoolExecutor = GlobalThreadPoolManage.getSimplePool(threadPoolConfigEntity.getThreadPoolName());
             updateMessage(threadPoolExecutor,threadPoolConfigEntity);
         }
-        //ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorMap.get(threadPoolName);
-
         return true;
     }
 

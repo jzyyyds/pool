@@ -1,15 +1,15 @@
-package com.example.pool.spring.boot.start.alarm.impl;
+package org.example.alarm.impl;
 
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
-import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
-import com.example.pool.spring.boot.start.domain.enums.AlarmEnum;
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
-import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
+
 import com.taobao.api.ApiException;
-import org.apache.commons.codec.binary.Base64;
+import org.example.config.DynamicThreadPoolNotifyAutoProperties;
+import org.example.domain.AlarmEnum;
+import org.example.domain.vo.AlarmMessageVo;
+import org.example.service.abstracts.AlarmAbstract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

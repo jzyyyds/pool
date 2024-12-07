@@ -1,8 +1,9 @@
-package com.example.pool.spring.boot.start.config;
+package org.example.config;
 
 
-import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
-import com.example.pool.spring.boot.start.service.impl.AlarmServiceImpl;
+
+import org.example.alarm.AlarmStrategy;
+import org.example.service.impl.AlarmServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +12,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.List;
 
 @Configuration
 @ConditionalOnProperty(prefix = "dynamic-thread-pool.alarm",name = "enable",havingValue = "true")
 @EnableConfigurationProperties(DynamicThreadPoolNotifyAutoProperties.class)
-@ComponentScan(basePackages = "com.example.pool.spring.boot.start.alarm")
+@ComponentScan(basePackages = "org.example.alarm")
 public class AlarmConfig {
     private final Logger logger = LoggerFactory.getLogger(AlarmConfig.class);
     @Value("${dynamic-thread-pool.alarm.enable}")

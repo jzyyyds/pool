@@ -1,4 +1,4 @@
-package com.example.pool.spring.boot.start.config;
+package org.example.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

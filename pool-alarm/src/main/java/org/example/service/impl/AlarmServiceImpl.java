@@ -1,19 +1,18 @@
-package com.example.pool.spring.boot.start.service.impl;
+package org.example.service.impl;
 
-import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
-import com.example.pool.spring.boot.start.config.DynamicThreadPoolNotifyAutoProperties;
-import com.example.pool.spring.boot.start.domain.vo.AlarmMessageVo;
-import com.example.pool.spring.boot.start.service.IAlarmService;
-import com.example.pool.spring.boot.start.service.abstracts.AlarmAbstract;
+
+import org.example.alarm.AlarmStrategy;
+import org.example.config.DynamicThreadPoolNotifyAutoProperties;
+import org.example.domain.vo.AlarmMessageVo;
+import org.example.service.IAlarmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 public class AlarmServiceImpl implements IAlarmService {
     private final Logger logger = LoggerFactory.getLogger(AlarmServiceImpl.class);
 

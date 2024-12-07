@@ -1,6 +1,5 @@
 package com.example.pool.spring.boot.start.config;
 
-import com.example.pool.spring.boot.start.alarm.AlarmStrategy;
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.domain.enums.RegistryEnumVO;
 import com.example.pool.spring.boot.start.job.ThreadPoolDataReportJob;
@@ -12,6 +11,8 @@ import com.example.pool.spring.boot.start.service.IDynamicThreadPoolService;
 import com.example.pool.spring.boot.start.service.impl.DynamicThreadPoolService;
 import com.example.pool.spring.boot.start.support.DynamicThreadPoolPostProcessor;
 import io.micrometer.core.instrument.util.StringUtils;
+import org.example.config.AlarmConfig;
+import org.example.service.IAlarmService;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
@@ -24,8 +25,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Map;
@@ -47,24 +47,13 @@ public class PoolConfig {
     }
 
     @Bean("dynamicThreadPollService")
+    @DependsOn("alarmService")
     public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap, RedissonClient redissonClient,IRegistry registry){
         applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
         if (StringUtils.isBlank(applicationName)) {
             applicationName = "缺省的";
             logger.warn("动态线程池，启动提示。SpringBoot 应用未配置 spring.application.name 无法获取到应用名称！");
         }
-//        //此时如果线程池的参数被修改了，此时需要从redis中进行读取参数
-//        Set<String> threadPools = threadPoolExecutorMap.keySet();
-//        for (String threadPool : threadPools) {
-//            ThreadPoolConfigEntity threadPoolConfigEntity = redissonClient.<ThreadPoolConfigEntity>getBucket(RegistryEnumVO.THREAD_POOL_CONFIG_PARAMETER_LIST_KEY.getKey() + "_" + applicationName + "_" + threadPool).get();
-//            if(threadPoolConfigEntity==null){
-//                continue;
-//            }
-//            ThreadPoolExecutor threadPoolExecutor = threadPoolExecutorMap.get(threadPool);
-//            threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
-//            threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
-//        }
-//        ConcurrentHashMap<String,ThreadPoolExecutor> map = new ConcurrentHashMap<>(threadPoolExecutorMap);
         return new DynamicThreadPoolService(applicationName,registry);
     }
 
