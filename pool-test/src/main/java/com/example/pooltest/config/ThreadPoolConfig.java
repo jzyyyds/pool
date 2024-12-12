@@ -87,22 +87,18 @@ public class ThreadPoolConfig {
     @Bean("dynamicThreadPoolExecutor")
     @DynamicPool
     public ThreadPoolExecutor dynamicThreadPoolExecutor(){
-        LinkedBlockingQueue<Object> objects1 = new LinkedBlockingQueue<>();
-        System.out.println(objects1);
-        ResizableCapacityLinkedBlockingQueue<Object> objects = new ResizableCapacityLinkedBlockingQueue<>(512);
-        System.out.println(objects);
         ThreadPoolExecutor threadPoolExecutor = ThreadPoolBuilder.builder().threadPoolId("jzy")
-                .corePoolSize(25)
-                .maxPoolNum(30)
+                .corePoolSize(2)
+                .maxPoolNum(2)
                 .awaitTerminationMillis(10L)
                 .threadFactory("jzy")
                 .allowCoreThreadTimeOut(false)
                 .waitForTasksToCompleteOnShutdown(true)
                 .keepAliveTime(10, TimeUnit.SECONDS)
-                .workQueue(new ResizableCapacityLinkedBlockingQueue<>(5000))
+                .workQueue(new ResizableCapacityLinkedBlockingQueue<>(2))
                 .rejected(new ThreadPoolExecutor.CallerRunsPolicy())
                 .threadFactory(Executors.defaultThreadFactory())
-                .executeTimeOut(1)
+                .executeTimeOut(100000000)
                 .build();
         return threadPoolExecutor;
     }

@@ -28,6 +28,8 @@ public class ExtensibleThreadPoolExecutor extends ThreadPoolExecutor implements 
     @Getter
     private final String threadPoolId;
 
+    //决策策略处理器的包装对象，其实就是把拒绝策略的插件对象的方法加上了
+    private final RejectedAwareHandlerWrapper handlerWrapper;
     /**
      *
      * @param threadPoolId
@@ -53,6 +55,11 @@ public class ExtensibleThreadPoolExecutor extends ThreadPoolExecutor implements 
         //给线程池Id赋值
         this.threadPoolId = threadPoolId;
         this.threadPoolPluginManager = threadPoolPluginManager;
+        while (handler instanceof RejectedAwareHandlerWrapper) {
+            handler = ((RejectedAwareHandlerWrapper) handler).getHandler();
+        }
+        this.handlerWrapper = new RejectedAwareHandlerWrapper(threadPoolPluginManager,handler);
+        super.setRejectedExecutionHandler(handlerWrapper);
     }
 
     @Override
@@ -92,7 +99,7 @@ public class ExtensibleThreadPoolExecutor extends ThreadPoolExecutor implements 
     private static class RejectedAwareHandlerWrapper implements RejectedExecutionHandler {
 
         //插件管理器
-        private final DefultThreadPoolPluginManager registry;
+        private final ThreadPoolPluginManager registry;
 
         @Setter
         @Getter

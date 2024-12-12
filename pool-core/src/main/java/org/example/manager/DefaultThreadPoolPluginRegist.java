@@ -29,7 +29,7 @@ public class DefaultThreadPoolPluginRegist implements ThreadPoolPluginRegist {
     @Override
     public void doRegister(ThreadPoolPluginSupport support) {
         support.register(new ExecuteAwarePluginImpl(support.getThreadPoolId(),executeTimeOut));
-        support.register(new RejectedAwarePluginImpl());
+        support.register(new RejectedAwarePluginImpl(support.getThreadPoolId()));
         support.register(new ShutdownAwarePluginImpl());
     }
 }

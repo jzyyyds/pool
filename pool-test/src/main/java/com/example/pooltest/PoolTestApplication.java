@@ -62,16 +62,16 @@ public class PoolTestApplication {
                 // 创建一个随机时间生成器
                 Random random = new Random();
                 // 随机时间，用于模拟任务启动延迟
-                int initialDelay = random.nextInt(10) + 1; // 1到10秒之间
+                int initialDelay = random.nextInt(1) + 1; // 1到10秒之间
                 // 随机休眠时间，用于模拟任务执行时间
-                int sleepTime = random.nextInt(10) + 1; // 1到10秒之间
+                int sleepTime = random.nextInt(10) + 10; // 1到10秒之间
 
                 // 提交任务到线程池
                 dynamicThreadPoolExecutor.submit(() -> {
                     try {
                         // 模拟任务启动延迟
-                        TimeUnit.SECONDS.sleep(initialDelay);
-                        System.out.println("DynamicTask started after " + initialDelay + " seconds.");
+                        //TimeUnit.SECONDS.sleep(initialDelay);
+                        //System.out.println("DynamicTask started after " + initialDelay + " seconds.");
 
                         // 模拟任务执行
                         TimeUnit.SECONDS.sleep(sleepTime);
@@ -81,7 +81,7 @@ public class PoolTestApplication {
                     }
                 });
 
-                Thread.sleep(random.nextInt(50) + 1);
+                //Thread.sleep(random.nextInt(2) + 1);
             }
         };
     }

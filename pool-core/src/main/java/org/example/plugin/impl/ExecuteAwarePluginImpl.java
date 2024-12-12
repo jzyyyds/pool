@@ -64,11 +64,10 @@ public class ExecuteAwarePluginImpl implements ExecuteAwarePlugin {
         AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
         alarmMessageVo.setMessage("任务执行超时！！！");
         Map<String,String> map = new HashMap<>();
-        map.put("threadPoolId",threadPoolId);
-        map.put("thread",thread.getName());
-        map.put("execute time",time.toString());
+        map.put("threadPoolId:",threadPoolId);
+        map.put("thread:",thread.getName());
+        map.put("execute_time:",time.toString());
         alarmMessageVo.setParameters(map);
-        log.error("动态线程池,任务执行超出阈值！！！");
         return alarmMessageVo;
     }
 
