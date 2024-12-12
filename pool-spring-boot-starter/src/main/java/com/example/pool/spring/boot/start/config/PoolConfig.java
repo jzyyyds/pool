@@ -11,7 +11,8 @@ import com.example.pool.spring.boot.start.service.IDynamicThreadPoolService;
 import com.example.pool.spring.boot.start.service.impl.DynamicThreadPoolService;
 import com.example.pool.spring.boot.start.support.DynamicThreadPoolPostProcessor;
 import io.micrometer.core.instrument.util.StringUtils;
-import org.example.config.AlarmConfig;
+import org.example.config.ApplicationContextHolder;
+import org.example.plugin.impl.ExecuteAwarePluginImpl;
 import org.example.service.IAlarmService;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -122,5 +124,10 @@ public class PoolConfig {
         return new GlobalThreadPoolManage();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public ApplicationContextHolder hippo4JApplicationContextHolder() {
+        return new ApplicationContextHolder();
+    }
 
 }

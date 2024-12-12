@@ -20,6 +20,9 @@ public interface ThreadPoolPluginSupport extends ThreadPoolPluginManager{
         getThreadPoolPluginManager().register(plugin);
     }
 
+    String getThreadPoolId();
+
+
     @Override
     default Collection<ExecuteAwarePlugin> getExecuteAwarePluginList(){
         return getThreadPoolPluginManager().getExecuteAwarePluginList();

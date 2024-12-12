@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,6 @@ public class AlarmConfig {
     public AlarmServiceImpl getAlarmStrategy(DynamicThreadPoolNotifyAutoProperties dynamicThreadPoolNotifyAutoProperties, List<AlarmStrategy> alarmStrategyList){
         if (enable){
             logger.info("开始初始化告警配置");
-            System.out.println(1111);
             return new AlarmServiceImpl(dynamicThreadPoolNotifyAutoProperties,alarmStrategyList);
         }
         return null;

@@ -30,7 +30,6 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     public DynamicThreadPoolService(String applicationName,IRegistry registry) {
         this.applicationName = applicationName;
         this.registry = registry;
-        //this.alarmService = alarmService;
     }
 
     @Override
