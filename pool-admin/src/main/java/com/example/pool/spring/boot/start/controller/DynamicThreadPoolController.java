@@ -6,6 +6,7 @@ import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.enums.Code;
 import com.example.pool.spring.boot.start.result.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RKeys;
 import org.redisson.api.RList;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RestController
@@ -27,11 +30,14 @@ public class DynamicThreadPoolController {
     @RequestMapping(value = "query_thread_pool_list", method = RequestMethod.GET)
     public Response<List<ThreadPoolConfigEntity>> queryThreadPoolList() {
         try {
+            Stream<String> keysStreamByPattern = redissonClient.getKeys().getKeysStreamByPattern("dynamic_heart:*");
             RList<ThreadPoolConfigEntity> cacheList = redissonClient.getList("THREAD_POOL_CONFIG_LIST_KEY");
+            List<String> applicationList = keysStreamByPattern.collect(Collectors.toList());
+            List<ThreadPoolConfigEntity> result = cacheList.stream().filter(x -> applicationList.contains("dynamic_heart:"+x.getAppName())).collect(Collectors.toList());
             return Response.<List<ThreadPoolConfigEntity>>builder()
                     .code(Code.SUCCESS.getCode())
                     .info(Code.SUCCESS.getInfo())
-                    .data(cacheList.readAll())
+                    .data(result)
                     .build();
         } catch (Exception e) {
             log.error("查询线程池数据异常", e);
