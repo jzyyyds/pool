@@ -1,7 +1,6 @@
 package org.example.config;
 
 
-
 import org.example.alarm.AlarmStrategy;
 import org.example.service.impl.AlarmServiceImpl;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

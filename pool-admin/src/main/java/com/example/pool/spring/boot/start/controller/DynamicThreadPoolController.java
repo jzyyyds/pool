@@ -6,7 +6,6 @@ import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.enums.Code;
 import com.example.pool.spring.boot.start.result.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RKeys;
 import org.redisson.api.RList;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;

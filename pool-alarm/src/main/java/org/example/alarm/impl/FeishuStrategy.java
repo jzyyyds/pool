@@ -2,7 +2,6 @@ package org.example.alarm.impl;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
-
 import org.example.config.DynamicThreadPoolNotifyAutoProperties;
 import org.example.domain.AlarmEnum;
 import org.example.domain.vo.AlarmMessageVo;

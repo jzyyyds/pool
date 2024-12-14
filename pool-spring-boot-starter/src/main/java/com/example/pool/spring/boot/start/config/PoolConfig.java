@@ -12,8 +12,6 @@ import com.example.pool.spring.boot.start.service.impl.DynamicThreadPoolService;
 import com.example.pool.spring.boot.start.support.DynamicThreadPoolPostProcessor;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.example.config.ApplicationContextHolder;
-import org.example.plugin.impl.ExecuteAwarePluginImpl;
-import org.example.service.IAlarmService;
 import org.redisson.Redisson;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
@@ -21,18 +19,15 @@ import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
@@ -43,7 +38,6 @@ public class PoolConfig {
     private String applicationName;
 
     @Bean
-    //@ConditionalOnBean(name = "dynamicThreadRedissonClient")
     public IRegistry redisRegistry(RedissonClient dynamicThreadRedissonClient) {
         return new RedisRegistry(dynamicThreadRedissonClient);
     }

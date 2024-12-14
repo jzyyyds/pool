@@ -3,14 +3,11 @@ package com.example.pooltest.config;
 import lombok.extern.slf4j.Slf4j;
 import org.example.build.DynamicPool;
 import org.example.build.ThreadPoolBuilder;
-import org.example.executor.DynamicThreadPoolExecutor;
 import org.example.queue.ResizableCapacityLinkedBlockingQueue;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.util.Objects;
 import java.util.concurrent.*;
 
 @Slf4j

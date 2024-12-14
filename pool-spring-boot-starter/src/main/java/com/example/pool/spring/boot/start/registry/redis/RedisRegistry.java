@@ -2,10 +2,8 @@ package com.example.pool.spring.boot.start.registry.redis;
 
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
 import com.example.pool.spring.boot.start.domain.enums.RegistryEnumVO;
-import com.example.pool.spring.boot.start.manager.GlobalThreadPoolManage;
 import com.example.pool.spring.boot.start.registry.IRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.example.executor.DynamicThreadPoolExecutor;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RLock;
@@ -14,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 @Slf4j

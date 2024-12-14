@@ -1,17 +1,11 @@
 package com.example.pool.spring.boot.start.manager;
 
 import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
-import com.example.pool.spring.boot.start.registry.IRegistry;
 import org.example.executor.DynamicThreadPoolExecutor;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class GlobalThreadPoolManage {

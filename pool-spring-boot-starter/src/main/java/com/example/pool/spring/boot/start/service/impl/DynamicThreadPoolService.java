@@ -6,7 +6,6 @@ import com.example.pool.spring.boot.start.manager.GlobalThreadPoolManage;
 import com.example.pool.spring.boot.start.registry.IRegistry;
 import com.example.pool.spring.boot.start.service.IDynamicThreadPoolService;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.example.domain.vo.AlarmMessageVo;
 import org.example.executor.DynamicThreadPoolExecutor;
 import org.example.queue.ResizableCapacityLinkedBlockingQueue;
@@ -15,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 

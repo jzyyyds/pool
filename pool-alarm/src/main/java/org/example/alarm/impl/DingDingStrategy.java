@@ -4,7 +4,6 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
-
 import com.taobao.api.ApiException;
 import org.example.config.DynamicThreadPoolNotifyAutoProperties;
 import org.example.domain.AlarmEnum;
