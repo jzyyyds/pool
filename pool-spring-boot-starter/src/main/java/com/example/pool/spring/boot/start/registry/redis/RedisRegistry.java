@@ -72,7 +72,7 @@ public class RedisRegistry implements IRegistry {
             if (threadPoolConfigEntity.isPresent()) {
                 ThreadPoolConfigEntity entity = threadPoolConfigEntity.get();
                 //如果存在的话，此时要判断是否相等
-                if (Objects.equals(pool,threadPoolConfigEntity)) {
+                if (Objects.equals(pool,entity)) {
                     return true;
                 }
             }
