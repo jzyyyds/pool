@@ -29,15 +29,6 @@ public class ThreadPoolConfigAdjustListener implements MessageListener<ThreadPoo
             logger.info("动态线程池，调整出现问题!");
             return;
         }
-        //成功后的操作
-        // 更新后上报最新修改数据即可
-        //List<ThreadPoolConfigEntity> threadPoolConfigEntities = dynamicThreadPoolService.queryThreadPoolList();
-        //registry.updateThreadPoolEntity(threadPoolConfigEntity);
-        //registry.reportThreadPool(threadPoolConfigEntities);
-
-//        ThreadPoolConfigEntity threadPoolConfigEntityCurrent = dynamicThreadPoolService.queryThreadPoolConfigByName(threadPoolConfigEntity.getThreadPoolName());
-//        registry.reportThreadPoolConfigParameter(threadPoolConfigEntityCurrent);
-
     }
 
 }
