@@ -1,7 +1,5 @@
 package com.example.pool.spring.boot.start.config;
 
-import com.example.pool.spring.boot.start.domain.entity.ThreadPoolConfigEntity;
-import com.example.pool.spring.boot.start.domain.enums.RegistryEnumVO;
 import com.example.pool.spring.boot.start.job.ThreadPoolDataReportJob;
 import com.example.pool.spring.boot.start.listener.ThreadPoolConfigAdjustListener;
 import com.example.pool.spring.boot.start.manager.GlobalThreadPoolManage;
@@ -12,11 +10,7 @@ import com.example.pool.spring.boot.start.service.impl.DynamicThreadPoolService;
 import com.example.pool.spring.boot.start.support.DynamicThreadPoolPostProcessor;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.example.config.ApplicationContextHolder;
-import org.redisson.Redisson;
-import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
-import org.redisson.codec.JsonJacksonCodec;
-import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,13 +31,13 @@ public class PoolConfig {
     private String applicationName;
 
     @Bean
-    public IRegistry redisRegistry(RedissonClient dynamicThreadRedissonClient) {
+    public IRegistry redisRegistry(DynamicThreadPoolAutoProperties dynamicThreadPoolAutoProperties) {
+        RedissonClient dynamicThreadRedissonClient = ComponentRedissonClientHolder.getInstance(dynamicThreadPoolAutoProperties);
         return new RedisRegistry(dynamicThreadRedissonClient);
     }
 
     @Bean("dynamicThreadPollService")
-    //@DependsOn("alarmService")
-    public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap, RedissonClient redissonClient,IRegistry registry){
+    public DynamicThreadPoolService dynamicThreadPollService(ApplicationContext applicationContext, Map<String, ThreadPoolExecutor> threadPoolExecutorMap,IRegistry registry){
         applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
         if (StringUtils.isBlank(applicationName)) {
             applicationName = "缺省的";
@@ -53,31 +47,31 @@ public class PoolConfig {
     }
 
 
-    @Bean("dynamicThreadRedissonClient")
-    //@ConditionalOnProperty(prefix = "dynamic.thread.pool.config",name = "used",value = "redis")
-    public RedissonClient redissonClient(DynamicThreadPoolAutoProperties properties) {
-        Config config = new Config();
-        config.setCodec(JsonJacksonCodec.INSTANCE);
-
-        config.useSingleServer()
-                .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
-                .setPassword(properties.getPassword())
-                .setConnectionPoolSize(properties.getPoolSize())
-                .setConnectionMinimumIdleSize(properties.getMinIdleSize())
-                .setIdleConnectionTimeout(properties.getIdleTimeout())
-                .setConnectTimeout(properties.getConnectTimeout())
-                .setRetryAttempts(properties.getRetryAttempts())
-                .setRetryInterval(properties.getRetryInterval())
-                .setPingConnectionInterval(properties.getPingInterval())
-                .setKeepAlive(properties.isKeepAlive())
-        ;
-
-        RedissonClient redissonClient = Redisson.create(config);
-
-        logger.info("动态线程池，注册器（redis）链接初始化完成。{} {} {}", properties.getHost(), properties.getPoolSize(), !redissonClient.isShutdown());
-
-        return redissonClient;
-    }
+//    @Bean(name = "dynamicThreadRedissonClient")
+//    //@ConditionalOnProperty(prefix = "dynamic.thread.pool.config.enabled",havingValue = "true")
+//    public RedissonClient redissonClient(DynamicThreadPoolAutoProperties properties) {
+//        Config config = new Config();
+//        config.setCodec(JsonJacksonCodec.INSTANCE);
+//
+//        config.useSingleServer()
+//                .setAddress("redis://" + properties.getHost() + ":" + properties.getPort())
+//                .setPassword(properties.getPassword())
+//                .setConnectionPoolSize(properties.getPoolSize())
+//                .setConnectionMinimumIdleSize(properties.getMinIdleSize())
+//                .setIdleConnectionTimeout(properties.getIdleTimeout())
+//                .setConnectTimeout(properties.getConnectTimeout())
+//                .setRetryAttempts(properties.getRetryAttempts())
+//                .setRetryInterval(properties.getRetryInterval())
+//                .setPingConnectionInterval(properties.getPingInterval())
+//                .setKeepAlive(properties.isKeepAlive())
+//        ;
+//
+//        RedissonClient redissonClient = Redisson.create(config);
+//
+//        logger.info("动态线程池，注册器（redis）链接初始化完成。{} {} {}", properties.getHost(), properties.getPoolSize(), !redissonClient.isShutdown());
+//
+//        return redissonClient;
+//    }
 
 
 
@@ -88,27 +82,27 @@ public class PoolConfig {
     }
 
     @Bean(name = "threadPoolListener")
-    //@ConditionalOnBean(name = "dynamicThreadRedissonClient")
     public ThreadPoolConfigAdjustListener threadPoolListener(IDynamicThreadPoolService dynamicThreadPoolService, IRegistry registry) {
         return new ThreadPoolConfigAdjustListener(dynamicThreadPoolService, registry);
     }
 
-    /**
-     * 方便测试，真正的实现是不需要的
-     * @param redissonClient
-     * @param threadPoolConfigAdjustListener
-     * @return
-     */
-    @Bean(name = "dynamicThreadPoolRedisTopic")
-    public RTopic threadPoolConfigAdjustListener(RedissonClient redissonClient, ThreadPoolConfigAdjustListener threadPoolConfigAdjustListener) {
-        RTopic topic = redissonClient.getTopic(RegistryEnumVO.DYNAMIC_THREAD_POOL_REDIS_TOPIC.getKey() + "_" + applicationName);
-        topic.addListener(ThreadPoolConfigEntity.class, threadPoolConfigAdjustListener);
-        return topic;
-    }
+//    /**
+//     * 方便测试，真正的实现是不需要的
+//     * @param redissonClient
+//     * @param threadPoolConfigAdjustListener
+//     * @return
+//     */
+//    @Bean(name = "dynamicThreadPoolRedisTopic")
+//    public RTopic threadPoolConfigAdjustListener(RedissonClient redissonClient, ThreadPoolConfigAdjustListener threadPoolConfigAdjustListener) {
+//        RTopic topic = redissonClient.getTopic(RegistryEnumVO.DYNAMIC_THREAD_POOL_REDIS_TOPIC.getKey() + "_" + applicationName);
+//        topic.addListener(ThreadPoolConfigEntity.class, threadPoolConfigAdjustListener);
+//        return topic;
+//    }
 
 
     @Bean
-    public DynamicThreadPoolPostProcessor dynamicThreadPoolPostProcessor(ApplicationContext context,RedissonClient redissonClient){
+    public DynamicThreadPoolPostProcessor dynamicThreadPoolPostProcessor(ApplicationContext context,DynamicThreadPoolAutoProperties dynamicThreadPoolAutoProperties){
+        RedissonClient redissonClient = ComponentRedissonClientHolder.getInstance(dynamicThreadPoolAutoProperties);
         return new DynamicThreadPoolPostProcessor(context,redissonClient);
     }
 

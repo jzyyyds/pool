@@ -86,7 +86,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.pool.spring.boot.start.PoolAdminApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

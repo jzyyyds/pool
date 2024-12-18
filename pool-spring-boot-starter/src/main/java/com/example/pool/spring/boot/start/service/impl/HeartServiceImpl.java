@@ -30,7 +30,7 @@ public class HeartServiceImpl implements IHeartService {
         RBucket<Object> bucket = redissonClient.getBucket(key);
         bucket.set(applicationName);
         bucket.expire(30,TimeUnit.SECONDS);
-        log.info("applicationName"+applicationName+"应用程序注册成功!");
+        log.info("applicationName:"+applicationName+"应用程序注册成功!");
     }
 
     @Override
