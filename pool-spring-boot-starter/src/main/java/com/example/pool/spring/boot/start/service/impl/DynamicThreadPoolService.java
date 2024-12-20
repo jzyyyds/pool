@@ -125,9 +125,10 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
         }
         //判断是否是使用加强后的队列，是的话在判断是否队列的大小有被更改，有的话就重新设置
+        //TODO 是否需要判断当前的任务数是否大于当前设置的值
         if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
             int workQueueSize = threadPoolConfigEntity.getWorkQueueSize();
-            if (threadPoolConfigEntity.getWorkQueueSize() != workQueueSize) {
+            if (((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).getCapacity() != workQueueSize) {
                 ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(threadPoolConfigEntity.getWorkQueueSize());
             }
         }

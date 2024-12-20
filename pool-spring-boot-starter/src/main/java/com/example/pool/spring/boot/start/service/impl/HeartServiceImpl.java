@@ -7,6 +7,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.PreDestroy;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -15,14 +17,29 @@ public class HeartServiceImpl implements IHeartService {
     private final RedissonClient redissonClient;
 
     private final String applicationName;
+    private final ApplicationContext applicationContext;
 
 
     private static final String redis_key = "dynamic_heart:";
 
     public HeartServiceImpl(ApplicationContext applicationContext,RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
-        this.applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        this.applicationContext = applicationContext;
+        this.applicationName = getApplicationName();
+
     }
+
+    private String getApplicationName() {
+        String applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        String hostAddress = null;
+        try {
+            hostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            log.info("get host error");
+        }
+        return applicationName + ":" + hostAddress;
+    }
+
     @Override
     public void registToRedis() {
         //注册到redis中去

@@ -34,11 +34,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.33</version>
         </dependency>
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
-            <version>3.26.0</version>
-        </dependency>
         <!--邮件通知的依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

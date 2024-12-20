@@ -15,4 +15,6 @@ public interface IRegistry {
     void reportThreadPoolConfigParameter(ThreadPoolConfigEntity threadPoolConfigEntity);
 
     void updateThreadPoolEntity(ThreadPoolConfigEntity threadPoolConfigEntity);
+
+    void reportPool(ThreadPoolConfigEntity threadPoolConfigEntity);
 }

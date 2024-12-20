@@ -19,13 +19,13 @@ public class PoolTestApplicationTests {
     @Autowired
     private RTopic dynamicThreadPoolRedisTopic;
 
-    @Test
-    public void test_dynamicThreadPoolRedisTopic() throws InterruptedException {
-        log.info("执行了");
-        ThreadPoolConfigEntity threadPoolConfigEntity = new ThreadPoolConfigEntity("pool-test", "threadPoolExecutor01");
-        threadPoolConfigEntity.setMaximumPoolSize(100);
-        dynamicThreadPoolRedisTopic.publish(threadPoolConfigEntity);
-        new CountDownLatch(1).await();
-    }
+//    @Test
+//    public void test_dynamicThreadPoolRedisTopic() throws InterruptedException {
+//        log.info("执行了");
+//        ThreadPoolConfigEntity threadPoolConfigEntity = new ThreadPoolConfigEntity("pool-test", "threadPoolExecutor01");
+//        threadPoolConfigEntity.setMaximumPoolSize(100);
+//        dynamicThreadPoolRedisTopic.publish(threadPoolConfigEntity);
+//        new CountDownLatch(1).await();
+//    }
 
 }

@@ -9,13 +9,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.build.DynamicPool;
 import org.example.executor.DynamicThreadPoolExecutor;
 import org.example.queue.ResizableCapacityLinkedBlockingQueue;
+import org.redisson.api.RBucket;
+import org.redisson.api.RList;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.Duration;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 动态线程池初始化后的注册
@@ -64,7 +72,8 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
     }
 
     private void fillPoolAndRegist(Object bean, String beanName) {
-        applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        //applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        applicationName = getApplicationName();
         if (StringUtils.isBlank(applicationName)) {
             applicationName = "缺省的";
             log.warn("动态线程池，启动提示。SpringBoot 应用未配置 spring.application.name 无法获取到应用名称！");
@@ -84,8 +93,10 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                 if (dynamicThreadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
                     //此时判断是否是可以更改的队列
                     ResizableCapacityLinkedBlockingQueue<Runnable> queue = (ResizableCapacityLinkedBlockingQueue)dynamicThreadPoolExecutor.getQueue();
-                    queue.setCapacity(threadPoolConfigEntity.getQueueSize());
+                    queue.setCapacity(threadPoolConfigEntity.getWorkQueueSize());
                 }
+                //TODO 当前队列的任务数量需要置为0，因为一旦下线任务就消失了
+                registToRedis(threadPoolConfigEntity);
                 GlobalThreadPoolManage.registDynamicPool(dynamicThreadPoolExecutor.getThreadPoolId(), dynamicThreadPoolExecutor);
             }else {
                 //第一次注册，直接注册到redis中即可
@@ -105,6 +116,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                      ResizableCapacityLinkedBlockingQueue<Runnable> queue = (ResizableCapacityLinkedBlockingQueue)threadPoolExecutor.getQueue();
                      queue.setCapacity(threadPoolConfigEntity.getQueueSize());
                  }
+                 registToRedis(threadPoolConfigEntity);
                  GlobalThreadPoolManage.registSimplePool(beanName,threadPoolExecutor);
             }else {
                 //第一次注册，直接注册到redis中即可
@@ -125,6 +137,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                  .workQueueSize(threadPoolExecutor.getQueue().remainingCapacity())
                  .dynamic(false)
                 .threadPoolId(name).build();
+        registToRedis(entity);
         //注册到全局的线程池管理器
         GlobalThreadPoolManage.registPool(entity);
         GlobalThreadPoolManage.registSimplePool(name,threadPoolExecutor);
@@ -145,7 +158,65 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                 .dynamic(true)
                 .threadPoolId(dynamicThreadPoolExecutor.getThreadPoolId()).build();
         //通过全局线程池管理器注册到redis中
+        registToRedis(entity);
         GlobalThreadPoolManage.registPool(entity);
         GlobalThreadPoolManage.registDynamicPool(dynamicThreadPoolExecutor.getThreadPoolId(), dynamicThreadPoolExecutor);
+    }
+
+    private String getApplicationName(){
+        String applicationName = applicationContext.getEnvironment().getProperty("spring.application.name");
+        String hostAddress = null;
+        try {
+            hostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            log.info("get host error");
+        }
+        return applicationName+":"+hostAddress;
+    }
+
+    private void registToRedis(ThreadPoolConfigEntity threadPoolConfigEntity) {
+        if (Objects.isNull(threadPoolConfigEntity)) {
+            return;
+        }
+        RList<ThreadPoolConfigEntity> list = redissonClient.getList(RegistryEnumVO.THREAD_POOL_CONFIG_LIST_KEY.getKey());
+        //此时需要先进行去重的操作
+        if (list.isEmpty()){
+            list.add(threadPoolConfigEntity);
+            return;
+        }
+        RLock lock = redissonClient.getLock(RegistryEnumVO.REPORT_THREAD_POOL_CONFIG_LIST_REDIS_LOCK_KEY.getKey());
+        try {
+            boolean hasLock = lock.tryLock(3000, 3000, TimeUnit.MILLISECONDS);
+            if(hasLock){
+                reportPoolInfomation(threadPoolConfigEntity,list);
+            }
+        } catch (InterruptedException e) {
+            //TODO 添加告警机制
+            log.error("动态线程池, 上报列表出现错误: {}", e.toString());
+        }finally {
+            lock.unlock();
+        }
+    }
+
+    private void reportPoolInfomation(ThreadPoolConfigEntity threadPoolConfigEntity, RList<ThreadPoolConfigEntity> list) {
+        threadPoolConfigEntity.setPoolSize(0);
+        threadPoolConfigEntity.setActiveCount(0);
+        threadPoolConfigEntity.setRemainingCapacity(threadPoolConfigEntity.getWorkQueueSize());
+        threadPoolConfigEntity.setQueueSize(0);
+        Optional<ThreadPoolConfigEntity> entity = list.stream().filter(x -> x.getAppName().equals(applicationName) && x.getThreadPoolName().equals(threadPoolConfigEntity.getThreadPoolName())).findFirst();
+        if (entity.isPresent()) {
+            //说明此时存在，需要修改
+            ThreadPoolConfigEntity poolConfig = entity.get();
+            list.remove(poolConfig);
+            list.add(threadPoolConfigEntity);
+        } else {
+            //说明是新添加的，此时直接注册
+            list.add(threadPoolConfigEntity);
+        }
+        //上报配置
+        String cacheKey = RegistryEnumVO.THREAD_POOL_CONFIG_PARAMETER_LIST_KEY.getKey() + "_" + threadPoolConfigEntity.getAppName() + "_" + threadPoolConfigEntity.getThreadPoolName();
+        RBucket<ThreadPoolConfigEntity> bucket = redissonClient.getBucket(cacheKey);
+        bucket.set(threadPoolConfigEntity);
+        bucket.expire(Duration.ofDays(30));
     }
 }
