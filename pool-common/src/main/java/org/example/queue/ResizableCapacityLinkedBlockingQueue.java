@@ -225,6 +225,9 @@ public class ResizableCapacityLinkedBlockingQueue<E> extends AbstractQueue<E>
         return capacity - count.get();
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
     /**
      * Adds the specified element to the tail of this queue, waiting if
      * necessary for space to become available.
