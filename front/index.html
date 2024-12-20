@@ -161,6 +161,9 @@ label {
             <input type="number" id="corePoolSize" name="corePoolSize"><br>
             <label for="maximumPoolSize">最大线程数:</label><br>
             <input type="number" id="maximumPoolSize" name="maximumPoolSize"><br>
+            <label for="queueType">队列类型</label><br>
+            <input type="text" id="queueType" name="queueType" readonly><br>
+<!--            <input type="hidden" id="queueType" value="production">-->
             <label for="workQueueSize">队列的长度</label><br>
             <input type="number" id="workQueueSize" name="workQueueSize"><br>
             <input type="text" id="dynamic" name="dynamic" style="display:none;" readonly><br>
@@ -270,9 +273,17 @@ label {
                         document.getElementById('threadPoolName').value = response.data.threadPoolName;
                         document.getElementById('corePoolSize').value = response.data.corePoolSize;
                         document.getElementById('maximumPoolSize').value = response.data.maximumPoolSize;
+                        document.getElementById('queueType').value = response.data.queueType;
                         document.getElementById('workQueueSize').value = response.data.workQueueSize;
                         // ... (填充其他只读字段) ...
                         document.getElementById('dynamic').value = response.data.dynamic;
+                        // 动态设置 workQueueSize 的只读状态
+                        var workQueueInput = document.getElementById('workQueueSize');
+                        if (response.data.queueType === 'ResizableCapacityLinkedBlockingQueue') { // 如果队列类型是 "test"，允许编辑
+                               workQueueInput.readOnly = false;
+                        } else { // 否则设为只读
+                                 workQueueInput.readOnly = true;
+                        }
                         modal.style.display = "block";
                     } else {
                         console.error('The request was successful but the data format is incorrect!');
