@@ -110,11 +110,36 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             Map<String,String> map = new HashMap<>();
             map.put("core.pool.size:",String.valueOf(corePoolSize));
             map.put("max.pool.size:",String.valueOf(maximumPoolSize));
+            map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
             alarmMessageVo.setParameters(map);
             IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
             alarmService.send(alarmMessageVo);
             logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
             return;
+        }
+        //判断是否是使用加强后的队列，是的话在判断是否队列的大小有被更改，有的话就重新设置
+        if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
+            int workQueueSize = threadPoolConfigEntity.getWorkQueueSize();
+            if (((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).getCapacity() != workQueueSize) {
+                if (workQueueSize < threadPoolExecutor.getQueue().remainingCapacity()) {
+                    //判断当前的任务数是否大于当前设置的值,是的话要进行告警
+                    AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
+                    alarmMessageVo.setApplicationName(applicationName);
+                    alarmMessageVo.setMessage("动态线程池调整出现问题!");
+                    Map<String,String> map = new HashMap<>();
+                    map.put("reason:","当前设置的队列数会导致任务的丢失，请重新设置！");
+                    map.put("core.pool.size:",String.valueOf(corePoolSize));
+                    map.put("max.pool.size:",String.valueOf(maximumPoolSize));
+                    map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
+                    alarmMessageVo.setParameters(map);
+                    IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
+                    alarmService.send(alarmMessageVo);
+                    logger.error("动态线程池, 变更配置时出错(设置的队列数会导致任务的丢失): {}", threadPoolConfigEntity);
+                    return;
+                } else {
+                    ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(threadPoolConfigEntity.getWorkQueueSize());
+                }
+            }
         }
         //变更的时候需要注意，要满足核心线程数小于最大线程数
         if (corePoolSize < threadPoolExecutor.getMaximumPoolSize()) {
@@ -124,19 +149,11 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
             threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
             threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
         }
-        //判断是否是使用加强后的队列，是的话在判断是否队列的大小有被更改，有的话就重新设置
-        //TODO 是否需要判断当前的任务数是否大于当前设置的值
-        if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
-            int workQueueSize = threadPoolConfigEntity.getWorkQueueSize();
-            if (((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).getCapacity() != workQueueSize) {
-                ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(threadPoolConfigEntity.getWorkQueueSize());
-            }
-        }
         //重新放入全局管理器，不然会更新失败
         //更新threadPoolConfigEntity
         threadPoolConfigEntity = buildThreadPoolConfigEntity(threadPoolConfigEntity,threadPoolExecutor);
+        //数据上报redis
         GlobalThreadPoolManage.updateAndRegist(threadPoolConfigEntity,threadPoolExecutor);
-        //TODO 数据上报redis
         registry.updateThreadPoolEntity(threadPoolConfigEntity);
         registry.reportThreadPoolConfigParameter(threadPoolConfigEntity);
         logger.info("动态线程池，上报线程池配置：{}", JSON.toJSONString(threadPoolConfigEntity));
@@ -151,7 +168,6 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         entity.setPoolSize(threadPoolExecutor.getPoolSize());
         entity.setRemainingCapacity(threadPoolExecutor.getQueue().remainingCapacity());
         entity.setQueueSize(threadPoolExecutor.getQueue().size());
-        //TODO 后续需要补充，现在先写死
         entity.setQueueType(threadPoolExecutor.getQueue().getClass().getSimpleName());
         entity.setWorkQueueSize(threadPoolConfigEntity.getWorkQueueSize());
         return entity;
