@@ -12,6 +12,9 @@
         <module>pool-spring-boot-starter</module>
         <module>pool-test</module>
         <module>pool-admin</module>
+        <module>pool-alarm</module>
+        <module>pool-common</module>
+        <module>pool-core</module>
     </modules>
 
     <properties>
