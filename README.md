@@ -14,3 +14,45 @@ Redis
 ![img_3.png](photot/img_3.png)
 
 #### 配置文件
+```
+spring:
+  #如果想要邮件通知才进行配置，不然不需要
+  mail:
+    # 下面这个是QQ邮箱host ， 企业邮箱 smtp.exmail.qq.com
+    host: smtp.qq.com
+  # tencent mail port  这个是固定的
+  port: 465
+  # 你的QQ邮箱
+  username: ********@qq.com
+  # 进入邮箱配置后得到的授权码
+  password: ************
+  test-connection: true
+  properties:
+    mail:
+      smtp:
+        ssl:
+          enable: true
+# 动态线程池管理配置
+dynamic:
+  thread:
+    pool:
+      config:
+        # 状态；true = 开启、false 关闭
+        enabled: true
+        # redis host
+        host: 127.0.0.1
+        # redis port
+        port: 6379
+        #可选
+        password: 123456
+dynamic-thread-pool:
+  alarm:
+   #是否开启告警功能
+    enable: true
+   #想要推送的平台，支持email,feishu,dingding
+    use-platform: dingding
+    webhook:
+       #飞书和钉钉机器人的webhook
+      feishu: **********
+      dingding: ***********
+```
