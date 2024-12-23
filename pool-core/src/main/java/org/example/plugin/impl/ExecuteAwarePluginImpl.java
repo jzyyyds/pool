@@ -24,10 +24,12 @@ public class ExecuteAwarePluginImpl implements ExecuteAwarePlugin {
     private long executeTimeOut;
 
     private String threadPoolId;
+    private boolean enable;
 
-    public ExecuteAwarePluginImpl(String threadPoolId,Long executeTimeOut) {
+    public ExecuteAwarePluginImpl(String threadPoolId,Long executeTimeOut,Boolean enable) {
         this.executeTimeOut = executeTimeOut;
         this.threadPoolId = threadPoolId;
+        this.enable = enable;
     }
 
     @Override
@@ -56,9 +58,14 @@ public class ExecuteAwarePluginImpl implements ExecuteAwarePlugin {
             return;
         }
         //此时超过了限定的时间，此时需要进行告警
-        AlarmMessageVo alarmMessage = buildAlarmMessage(runnable,time,thread);
-        IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
-        alarmService.send(alarmMessage);
+        if (enable) {
+            AlarmMessageVo alarmMessage = buildAlarmMessage(runnable,time,thread);
+            IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
+            alarmService.send(alarmMessage);
+        } else {
+            log.info("the task is out the time but alarm enable is false!");
+        }
+
     }
 
     private AlarmMessageVo buildAlarmMessage(Runnable runnable,Long time,Thread thread) {

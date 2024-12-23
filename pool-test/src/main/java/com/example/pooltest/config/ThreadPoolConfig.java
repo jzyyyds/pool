@@ -96,6 +96,7 @@ public class ThreadPoolConfig {
                 .rejected(new ThreadPoolExecutor.CallerRunsPolicy())
                 .threadFactory(Executors.defaultThreadFactory())
                 .executeTimeOut(100000000)
+                .enable(false)
                 .build();
         return threadPoolExecutor;
     }

@@ -19,18 +19,24 @@ public class RejectedAwarePluginImpl implements RejectedAwarePlugin {
 
 
     private String threadPoolId;
+    private boolean enable;
 
-    public RejectedAwarePluginImpl(String threadPoolId) {
+    public RejectedAwarePluginImpl(String threadPoolId,Boolean enable) {
         this.threadPoolId = threadPoolId;
+        this.enable = enable;
     }
 
     @Override
     public void beforeRejectedExecution(Runnable runnable, ThreadPoolExecutor executor) {
         //发送告警信息
         log.info("进入拒绝策略啦");
-        AlarmMessageVo alarmMessageVo = buildAlarmMessage(runnable, executor);
-        IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
-        alarmService.send(alarmMessageVo);
+        if (enable) {
+            AlarmMessageVo alarmMessageVo = buildAlarmMessage(runnable, executor);
+            IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
+            alarmService.send(alarmMessageVo);
+        } else {
+            log.info("thread pool is in reject but alarm enable is false!");
+        }
     }
 
     private AlarmMessageVo buildAlarmMessage(Runnable runnable, ThreadPoolExecutor executor) {

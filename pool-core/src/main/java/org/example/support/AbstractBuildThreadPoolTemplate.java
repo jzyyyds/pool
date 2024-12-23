@@ -26,6 +26,7 @@ public class AbstractBuildThreadPoolTemplate {
                     initParam.getExecuteTimeOut(),
                     initParam.getWaitForTasksToCompleteOnShutdown(),
                     initParam.getAwaitTerminationMillis(),
+                    initParam.getEnable(),
                     initParam.getWorkQueue(),
                     initParam.getThreadPoolId(),
                     initParam.getThreadFactory(),
@@ -68,6 +69,8 @@ public class AbstractBuildThreadPoolTemplate {
         private Boolean waitForTasksToCompleteOnShutdown;
 
         private Boolean allowCoreThreadTimeOut = false;
+
+        private Boolean enable = true;
 
         public ThreadPoolInitParam(ThreadFactory threadFactory) {
             this.threadFactory = threadFactory;

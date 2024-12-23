@@ -57,6 +57,8 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     private Boolean allowCoreThreadTimeOut = false;
     //是否为守护线程
     private boolean isDaemon = false;
+    //是否启用默认插件的告警功能
+    private boolean enable = true;
 
     //得到线程池核心线程数量的方法
     private Integer calculateCore() {
@@ -162,6 +164,11 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
         return this;
     }
 
+    public ThreadPoolBuilder enable(boolean enable) {
+        this.enable = enable;
+        return this;
+    }
+
 
     //得到线程池构建器的方法
     public static ThreadPoolBuilder builder() {
@@ -207,6 +214,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
             //设置线程池关闭时，等待剩余任务执行的最大时间
             initParam.setAwaitTerminationMillis(builder.awaitTerminationMillis);
             initParam.setWorkQueue(builder.workQueue);
+            initParam.setEnable(builder.enable);
         return initParam;
     }
 

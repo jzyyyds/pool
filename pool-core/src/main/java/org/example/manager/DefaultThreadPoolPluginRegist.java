@@ -16,11 +16,12 @@ public class DefaultThreadPoolPluginRegist implements ThreadPoolPluginRegist {
 
     private long executeTimeOut;
     private long awaitTerminationMillis;
+    private boolean enable;
 
     @Override
     public void doRegister(ThreadPoolPluginSupport support) {
-        support.register(new ExecuteAwarePluginImpl(support.getThreadPoolId(),executeTimeOut));
-        support.register(new RejectedAwarePluginImpl(support.getThreadPoolId()));
+        support.register(new ExecuteAwarePluginImpl(support.getThreadPoolId(),executeTimeOut,enable));
+        support.register(new RejectedAwarePluginImpl(support.getThreadPoolId(),enable));
         support.register(new ShutdownAwarePluginImpl());
     }
 }

@@ -27,7 +27,7 @@ public class DynamicThreadPoolExecutor extends ExtensibleThreadPoolExecutor impl
     public DynamicThreadPoolExecutor(
                                      int corePoolSize, int maximumPoolSize,
                                      long keepAliveTime, TimeUnit unit,
-                                     long executeTimeOut, boolean waitForTasksToCompleteOnShutdown, long awaitTerminationMillis,
+                                     long executeTimeOut, boolean waitForTasksToCompleteOnShutdown, long awaitTerminationMillis,boolean enable,
                                      @NonNull BlockingQueue<Runnable> blockingQueue,
                                      @NonNull String threadPoolId,
                                      @NonNull ThreadFactory threadFactory,
@@ -39,7 +39,7 @@ public class DynamicThreadPoolExecutor extends ExtensibleThreadPoolExecutor impl
         log.info("Initializing ExecutorService {}", threadPoolId);
         this.waitForTasksToCompleteOnShutdown = waitForTasksToCompleteOnShutdown;
         //内置的插件需要进行注册，此时在这里注入
-        new DefaultThreadPoolPluginRegist(executeTimeOut,awaitTerminationMillis).doRegister(this);
+        new DefaultThreadPoolPluginRegist(executeTimeOut,awaitTerminationMillis,enable).doRegister(this);
     }
 
     @Override

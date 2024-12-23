@@ -13,6 +13,7 @@ import org.example.queue.ResizableCapacityLinkedBlockingQueue;
 import org.example.service.IAlarmService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,9 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
     private final String applicationName;
 
     private final IRegistry registry;
+
+    @Value("${dynamic-thread-pool.alarm.enable}")
+    private boolean enable;
 
     public DynamicThreadPoolService(String applicationName,IRegistry registry) {
         this.applicationName = applicationName;
@@ -104,38 +108,48 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
         int corePoolSize = threadPoolConfigEntity.getCorePoolSize();
         int maximumPoolSize = threadPoolConfigEntity.getMaximumPoolSize();
         if (corePoolSize>maximumPoolSize){
-            AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
-            alarmMessageVo.setApplicationName(applicationName);
-            alarmMessageVo.setMessage("动态线程池调整出现问题");
-            Map<String,String> map = new HashMap<>();
-            map.put("core.pool.size:",String.valueOf(corePoolSize));
-            map.put("max.pool.size:",String.valueOf(maximumPoolSize));
-            map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
-            alarmMessageVo.setParameters(map);
-            IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
-            alarmService.send(alarmMessageVo);
-            logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
-            return;
+            if (enable) {
+                AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
+                alarmMessageVo.setApplicationName(applicationName);
+                alarmMessageVo.setMessage("动态线程池调整出现问题");
+                Map<String,String> map = new HashMap<>();
+                map.put("core.pool.size:",String.valueOf(corePoolSize));
+                map.put("max.pool.size:",String.valueOf(maximumPoolSize));
+                map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
+                alarmMessageVo.setParameters(map);
+                IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
+                alarmService.send(alarmMessageVo);
+                logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
+                return;
+            } else {
+                logger.error("动态线程池, 变更配置时出错(最大线程数小于核心线程数): {}", threadPoolConfigEntity);
+                return;
+            }
         }
         //判断是否是使用加强后的队列，是的话在判断是否队列的大小有被更改，有的话就重新设置
         if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
             int workQueueSize = threadPoolConfigEntity.getWorkQueueSize();
             if (((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).getCapacity() != workQueueSize) {
                 if (workQueueSize < threadPoolExecutor.getQueue().remainingCapacity()) {
-                    //判断当前的任务数是否大于当前设置的值,是的话要进行告警
-                    AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
-                    alarmMessageVo.setApplicationName(applicationName);
-                    alarmMessageVo.setMessage("动态线程池调整出现问题!");
-                    Map<String,String> map = new HashMap<>();
-                    map.put("reason:","当前设置的队列数会导致任务的丢失，请重新设置！");
-                    map.put("core.pool.size:",String.valueOf(corePoolSize));
-                    map.put("max.pool.size:",String.valueOf(maximumPoolSize));
-                    map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
-                    alarmMessageVo.setParameters(map);
-                    IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
-                    alarmService.send(alarmMessageVo);
-                    logger.error("动态线程池, 变更配置时出错(设置的队列数会导致任务的丢失): {}", threadPoolConfigEntity);
-                    return;
+                    if (enable) {
+                        //判断当前的任务数是否大于当前设置的值,是的话要进行告警
+                        AlarmMessageVo alarmMessageVo = new AlarmMessageVo();
+                        alarmMessageVo.setApplicationName(applicationName);
+                        alarmMessageVo.setMessage("动态线程池调整出现问题!");
+                        Map<String,String> map = new HashMap<>();
+                        map.put("reason:","当前设置的队列数会导致任务的丢失，请重新设置！");
+                        map.put("core.pool.size:",String.valueOf(corePoolSize));
+                        map.put("max.pool.size:",String.valueOf(maximumPoolSize));
+                        map.put("queue.size:",String.valueOf(threadPoolConfigEntity.getWorkQueueSize()));
+                        alarmMessageVo.setParameters(map);
+                        IAlarmService alarmService = ApplicationContextHolder.getBean(IAlarmService.class);
+                        alarmService.send(alarmMessageVo);
+                        logger.error("动态线程池, 变更配置时出错(设置的队列数会导致任务的丢失): {}", threadPoolConfigEntity);
+                        return;
+                    } else {
+                        logger.error("动态线程池, 变更配置时出错(设置的队列数会导致任务的丢失): {}", threadPoolConfigEntity);
+                        return;
+                    }
                 } else {
                     ((ResizableCapacityLinkedBlockingQueue<Runnable>) threadPoolExecutor.getQueue()).setCapacity(threadPoolConfigEntity.getWorkQueueSize());
                 }
