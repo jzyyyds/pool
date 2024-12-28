@@ -85,8 +85,6 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
             ThreadPoolConfigEntity threadPoolConfigEntity = redissonClient.<ThreadPoolConfigEntity>getBucket(RegistryEnumVO.THREAD_POOL_CONFIG_PARAMETER_LIST_KEY.getKey() + "_" + applicationName + "_" + threadPoolId).get();
             if (Objects.nonNull(threadPoolConfigEntity)) {
                 //直接以redis的配置为主，上报到全局管理器那边
-                //通过全局线程池管理器注册到redis中
-                GlobalThreadPoolManage.registPool(threadPoolConfigEntity);
                 //修改相关的配置
                 dynamicThreadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
                 dynamicThreadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
@@ -95,8 +93,8 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                     ResizableCapacityLinkedBlockingQueue<Runnable> queue = (ResizableCapacityLinkedBlockingQueue)dynamicThreadPoolExecutor.getQueue();
                     queue.setCapacity(threadPoolConfigEntity.getWorkQueueSize());
                 }
-                //TODO 当前队列的任务数量需要置为0，因为一旦下线任务就消失了
                 registToRedis(threadPoolConfigEntity);
+                GlobalThreadPoolManage.registPool(threadPoolConfigEntity);
                 GlobalThreadPoolManage.registDynamicPool(dynamicThreadPoolExecutor.getThreadPoolId(), dynamicThreadPoolExecutor);
             }else {
                 //第一次注册，直接注册到redis中即可
@@ -108,7 +106,6 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
             ThreadPoolConfigEntity threadPoolConfigEntity = redissonClient.<ThreadPoolConfigEntity>getBucket(RegistryEnumVO.THREAD_POOL_CONFIG_PARAMETER_LIST_KEY.getKey() + "_" + applicationName + "_" + beanName).get();
              if (Objects.nonNull(threadPoolConfigEntity)) {
                  //注册到全局的线程池管理器
-                 GlobalThreadPoolManage.registPool(threadPoolConfigEntity);
                  threadPoolExecutor.setCorePoolSize(threadPoolConfigEntity.getCorePoolSize());
                  threadPoolExecutor.setMaximumPoolSize(threadPoolConfigEntity.getMaximumPoolSize());
                  if (threadPoolExecutor.getQueue() instanceof ResizableCapacityLinkedBlockingQueue) {
@@ -117,6 +114,7 @@ public class DynamicThreadPoolPostProcessor implements BeanPostProcessor {
                      queue.setCapacity(threadPoolConfigEntity.getQueueSize());
                  }
                  registToRedis(threadPoolConfigEntity);
+                 GlobalThreadPoolManage.registPool(threadPoolConfigEntity);
                  GlobalThreadPoolManage.registSimplePool(beanName,threadPoolExecutor);
             }else {
                 //第一次注册，直接注册到redis中即可

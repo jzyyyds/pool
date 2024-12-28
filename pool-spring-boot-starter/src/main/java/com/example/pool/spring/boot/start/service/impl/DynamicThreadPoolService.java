@@ -103,6 +103,7 @@ public class DynamicThreadPoolService implements IDynamicThreadPoolService {
 
     private <T extends ThreadPoolExecutor> void updateMessage(T threadPoolExecutor,ThreadPoolConfigEntity threadPoolConfigEntity) {
         if (threadPoolExecutor==null){
+            //TODO 如果获取不到，说明有误，需要告警
             logger.info("threadPoolExecutor is null");
         }
         int corePoolSize = threadPoolConfigEntity.getCorePoolSize();
