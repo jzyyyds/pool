@@ -48,7 +48,8 @@ public class DynamicThreadPoolExecutor extends ExtensibleThreadPoolExecutor impl
             super.shutdown();
         } else {
             super.shutdownNow();
-        }//在这里清空插件管理器中的插件
+        }
+        //在这里清空插件管理器中的插件
         getThreadPoolPluginManager().clear();
     }
 

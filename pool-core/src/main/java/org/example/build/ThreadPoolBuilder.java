@@ -59,7 +59,13 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
     private boolean isDaemon = false;
     //是否启用默认插件的告警功能
     private boolean enable = true;
+    //提供线程池预热的功能
+    private boolean prestartAllCoreThreads = false;
 
+    private ThreadPoolBuilder prestartAllCoreThreads(Boolean prestartAllCoreThreads){
+        this.prestartAllCoreThreads = prestartAllCoreThreads;
+        return this;
+    }
     //得到线程池核心线程数量的方法
     private Integer calculateCore() {
         int cpuCoreNum = Runtime.getRuntime().availableProcessors();
@@ -215,6 +221,7 @@ public class ThreadPoolBuilder implements Builder<ThreadPoolExecutor> {
             initParam.setAwaitTerminationMillis(builder.awaitTerminationMillis);
             initParam.setWorkQueue(builder.workQueue);
             initParam.setEnable(builder.enable);
+            initParam.setPrestartAllCoreThreads(builder.prestartAllCoreThreads);
         return initParam;
     }
 

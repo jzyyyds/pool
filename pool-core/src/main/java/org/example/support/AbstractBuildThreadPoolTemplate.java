@@ -33,7 +33,12 @@ public class AbstractBuildThreadPoolTemplate {
                     initParam.getRejectedExecutionHandler());
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException(String.format("Error creating thread pool parameter. threadPool id: %s", initParam.getThreadPoolId()), ex);
-        }//在这里设置了任务装饰器
+        }
+        //判断是否需要进行预热操作
+        if (initParam.prestartAllCoreThreads) {
+            dynamicThreadPoolExecutor.prestartAllCoreThreads();
+        }
+        //在这里设置了任务装饰器
         dynamicThreadPoolExecutor.allowCoreThreadTimeOut(initParam.allowCoreThreadTimeOut);
         return dynamicThreadPoolExecutor;
     }
@@ -71,6 +76,8 @@ public class AbstractBuildThreadPoolTemplate {
         private Boolean allowCoreThreadTimeOut = false;
 
         private Boolean enable = true;
+
+        private Boolean prestartAllCoreThreads = false;
 
         public ThreadPoolInitParam(ThreadFactory threadFactory) {
             this.threadFactory = threadFactory;
