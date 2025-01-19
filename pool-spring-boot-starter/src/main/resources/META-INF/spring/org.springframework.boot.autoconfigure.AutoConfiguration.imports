@@ -1,3 +1,4 @@
 com.example.pool.spring.boot.start.config.PoolConfig
 com.example.pool.spring.boot.start.config.HeartConfig
 org.example.config.AlarmConfig
+com.example.pool.spring.boot.start.config.PrometheusAutoConfig

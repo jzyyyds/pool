@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.example.pool.spring.boot.start.config.PoolConfig,\
   org.example.config.AlarmConfig,\
-  com.example.pool.spring.boot.start.config.HeartConfig
+  com.example.pool.spring.boot.start.config.HeartConfig,\
+  com.example.pool.spring.boot.start.config.PrometheusAutoConfig
