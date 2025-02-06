@@ -113,7 +113,7 @@ public class RedisRegistry implements IRegistry {
                 return;
             } else {
                 Optional<ThreadPoolConfigEntity> result = list.stream().
-                        filter(x -> x.isDynamic() == threadPoolConfigEntity.isDynamic() && x.getThreadPoolName().equals(threadPoolConfigEntity.getThreadPoolName())).findFirst();
+                        filter(x -> x.isDynamic() == threadPoolConfigEntity.isDynamic() && x.getThreadPoolName().equals(threadPoolConfigEntity.getThreadPoolName()) && x.getAppName().equals(threadPoolConfigEntity.getAppName())).findFirst();
                 if (Objects.isNull(result)) {
                     list.add(threadPoolConfigEntity);
                 } else {

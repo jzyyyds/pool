@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @EnableConfigurationProperties(ThreadPoolConfigProperties.class)
 @Configurable
+@ComponentScan(basePackages = {"com.example.pooltest.config"})
 public class PoolTestApplication {
 
     public static void main(String[] args) {
@@ -37,11 +39,9 @@ public class PoolTestApplication {
                     try {
                         // 模拟任务启动延迟
                         TimeUnit.SECONDS.sleep(initialDelay);
-                        System.out.println("Task started after " + initialDelay + " seconds.");
 
                         // 模拟任务执行
                         TimeUnit.SECONDS.sleep(sleepTime);
-                        System.out.println("Task executed for " + sleepTime + " seconds.");
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }

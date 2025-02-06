@@ -16,7 +16,7 @@ import java.util.concurrent.*;
 public class ThreadPoolConfig {
     @Bean("threadPoolExecutor01")
     @DynamicPool
-    public ThreadPoolExecutor threadPoolExecutor01(ThreadPoolConfigProperties properties) {
+    public ExecutorService threadPoolExecutor01(ThreadPoolConfigProperties properties) {
         System.out.println("开始初始化");
         // 实例化策略
         RejectedExecutionHandler handler;
